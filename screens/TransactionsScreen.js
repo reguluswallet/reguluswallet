@@ -4,68 +4,47 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
+import {connect} from 'react-redux';
 import stellar from 'stellar-sdk';
-import _ from 'lodash';
-
-
+import {LoadAccount, LoadOperations} from '../actions';
 import TransactionRow from '../components/TransactionRow';
 import {Balance, SectionHeader} from '../components';
 import {Colors, Layout} from '../constants';
 
 var server = new stellar.Server('https://horizon-testnet.stellar.org');
 
-export default class TransactionsScreen extends Component {
+class TransactionsScreen extends Component {
     static navigationOptions = {
         title: 'Transactions',
     };
 
-    state = {
-        balance: 0.00
-    };
-
     componentWillMount() {
-        let vm = this;
-        server.loadAccount('GASOCNHNNLYFNMDJYQ3XFMI7BYHIOCFW3GJEOWRPEGK2TDPGTG2E5EDW').then(function (account) {
-            // account.transactions().then(function (transactions) {
-            //     console.log(transactions);
-            // });
-            server.transactions()
-                .forAccount('GD37245DE23W6I2JRULHEA22Y35XDVPGEXJ43W7TWWXORWIBDZC7JHCS')
-                .call().then(function(r){ console.log(r); });
-            let nativeBalance = _.find(account.balances, function(b) { return b.asset_type == 'native'; });
-            vm.setState({
-                balance: nativeBalance.balance
-            });
-        });
-
-        this.createDataSource([1,2,3]);
+        this.props.LoadAccount(this.props.id);
+        this.props.LoadOperations(this.props.id);
+        this.createDataSource(this.props);
     }
 
     componentWillReceiveProps(nextProps) {
-        // nextProps are the next set of props that this component
-        // will be rendered with
-        // this.props is still the old set of props
-
         this.createDataSource(nextProps);
     }
 
-    createDataSource(data) {
+    createDataSource({transactions}) {
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
 
-        this.dataSource = ds.cloneWithRows(data);
+        this.dataSource = ds.cloneWithRows(transactions);
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <Balance>{this.state.balance}</Balance>
+                <Balance>{this.props.balance}</Balance>
                 <ListView
                     enableEmptySections
                     dataSource={this.dataSource}
-                    renderRow={() => <TransactionRow/>}
-                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator} />}
+                    renderRow={item => <TransactionRow item={item}/>}
+                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
                     renderHeader={() => <SectionHeader>Transactions</SectionHeader>}
                 />
             </View>
@@ -85,3 +64,10 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
     }
 });
+
+const mapStateToProps = ({account}) => {
+    let {id, balance, transactions} = account;
+    return {id, balance, transactions};
+};
+
+export default connect(mapStateToProps, {LoadAccount, LoadOperations})(TransactionsScreen);

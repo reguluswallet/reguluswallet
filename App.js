@@ -1,11 +1,17 @@
 import './global';
 import React, {Component} from 'react';
 import {Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {Provider} from 'react-redux';
+import {createStore, applyMiddleware} from 'redux';
+import ReduxThunk from 'redux-thunk';
 import {AppLoading, Asset, Font} from 'expo';
 import {Ionicons} from '@expo/vector-icons';
 import firebase from 'firebase';
+import reducers from './reducers';
 import RootNavigation from './navigation/RootNavigation';
 import Config from './config';
+
+const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
 
 firebase.initializeApp(Config.firebase);
 
@@ -25,10 +31,12 @@ export default class App extends Component {
             );
         } else {
             return (
-                <View style={styles.container}>
-                    <StatusBar barStyle="default"/>
-                    <RootNavigation/>
-                </View>
+                <Provider store={store}>
+                    <View style={styles.container}>
+                        <StatusBar barStyle="default"/>
+                        <RootNavigation/>
+                    </View>
+                </Provider>
             );
         }
     }

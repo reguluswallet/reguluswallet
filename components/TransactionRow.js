@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {Amount} from '../components/';
+import {connect} from 'react-redux';
 
-export default class Balance extends Component {
+class TransactionRow extends Component {
     state = {
         open: false,
         buttonStyle: {
@@ -22,13 +23,13 @@ export default class Balance extends Component {
 
     }
 
-    _renderDetails() {
+    _renderDetails(item) {
         if (this.state.open) {
             return (
                 <View style={styles.expandedContainer}>
                     <View style={styles.mb}>
                         <Text style={styles.expandedTitle}>Account ID:</Text>
-                        <Text style={styles.expandedText}>GC25DC4QTB7RYKQZ6GR5L4Z4MCEJXR6PX6LBAKIOL2SFNE2CIMV3XQUE</Text>
+                        <Text style={styles.expandedText}>{item.from}</Text>
                     </View>
                     <View>
                         <Text style={styles.expandedTitle}>Memo:</Text>
@@ -40,12 +41,17 @@ export default class Balance extends Component {
     }
 
     render() {
+        let {item} = this.props;
+
+        const from = item.from.substr(0, 4);
+        const sign = (item.source_account === this.props.id) ? 'negative' : 'positive';
+
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={this.onRowPress.bind(this)}>
                 <View style={styles.container}>
                     <View style={styles.container__info}>
-                        <Text style={styles.title}>GC25</Text>
-                        <Amount number="negative">111.878</Amount>
+                        <Text style={styles.title}>{from}</Text>
+                        <Amount number={sign}>{item.amount}</Amount>
                     </View>
                     <View style={styles.container__button}>
                         <Ionicons
@@ -56,11 +62,18 @@ export default class Balance extends Component {
                         />
                     </View>
                 </View>
-                {this._renderDetails()}
+                {this._renderDetails(item)}
             </TouchableOpacity>
         )
     }
 }
+
+const mapStateToProps = ({account}) => {
+    let {id, balance, transactions} = account;
+    return {id, balance, transactions};
+};
+
+export default connect(mapStateToProps)(TransactionRow);
 
 const styles = StyleSheet.create({
     expandedContainer: {
