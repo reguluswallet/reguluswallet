@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "regulus-wallet",
+    "description": "A wallet for Stellar.",
+    "slug": "regulus-wallet",
+    "privacy": "public",
+    "sdkVersion": "25.0.0",
+    "platforms": [
+      "ios"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash@3x.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#d4eef7"
+    },
+    "ios": {
+      "supportsTablet": false
+    },
+    "packagerOpts": {
+      "config": "./rn-cli.config.js"
+    }
+  }
+}
