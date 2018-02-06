@@ -14,6 +14,7 @@ const Balance = (props) => {
 const styles = StyleSheet.create({
     container: {
         padding: Layout.gutter,
+        backgroundColor: Colors.white,
         borderBottomWidth: 1,
         borderBottomColor: Colors.grey
     },
