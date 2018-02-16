@@ -1,13 +1,14 @@
 import React from 'react';
-import { Text, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import {Text} from '../../components';
 import {Colors, Layout} from '../../constants';
 
 const Button = ({ onPress, children }) => {
-    const { buttonStyle, textStyle } = styles;
+    const { button, text } = styles;
 
     return (
-        <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={buttonStyle}>
-            <Text style={textStyle}>
+        <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={button}>
+            <Text style={text}>
                 {children}
             </Text>
         </TouchableOpacity>
@@ -15,19 +16,18 @@ const Button = ({ onPress, children }) => {
 };
 
 const styles = {
-    textStyle: {
-        fontFamily: 'clear-sans',
+    text: {
         alignSelf: 'center',
         color: Colors.white,
-        fontSize: 16,
         lineHeight: 20,
-        paddingTop: 15,
-        paddingBottom: 15
+        paddingTop: Layout.gutter,
+        paddingBottom: Layout.gutter
     },
-    buttonStyle: {
+    button: {
         alignSelf: 'stretch',
         backgroundColor: Colors.blue,
-        borderRadius: Layout.radius
+        borderRadius: Layout.radius,
+        marginBottom: Layout.gutter / 2
     }
 };
 
