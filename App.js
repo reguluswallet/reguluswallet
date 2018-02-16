@@ -1,17 +1,21 @@
 import './global';
 import React, {Component} from 'react';
-import {Platform, StatusBar, StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware} from 'redux';
 import ReduxThunk from 'redux-thunk';
 import {AppLoading, Asset, Font} from 'expo';
 import {Ionicons} from '@expo/vector-icons';
+import {Root, StyleProvider} from 'native-base';
+import getTheme from './native-base-theme/components'
 import firebase from 'firebase';
 import reducers from './reducers';
 import RootNavigation from './navigation/RootNavigation';
+import {RootNavigationMiddleware} from './navigation/RootNavigation';
 import Config from './config';
 
-const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
+
+const store = createStore(reducers, applyMiddleware(ReduxThunk, RootNavigationMiddleware));
 
 firebase.initializeApp(Config.firebase);
 
@@ -32,10 +36,12 @@ export default class App extends Component {
         } else {
             return (
                 <Provider store={store}>
-                    <View style={styles.container}>
-                        <StatusBar barStyle="default"/>
-                        <RootNavigation/>
-                    </View>
+                    <StyleProvider style={getTheme()}>
+                        <Root>
+                            <StatusBar barStyle="default"/>
+                            <RootNavigation/>
+                        </Root>
+                    </StyleProvider>
                 </Provider>
             );
         }
@@ -43,10 +49,9 @@ export default class App extends Component {
 
     _loadResourcesAsync = async () => {
         return Promise.all([
-            // Asset.loadAsync([
-            //     require('./assets/images/robot-dev.png'),
-            //     require('./assets/images/robot-prod.png'),
-            // ]),
+            Asset.loadAsync([
+                require('./assets/images/wallet.png')
+            ]),
             Font.loadAsync({
                 // This is the font that we are using for our tab bar
                 ...Ionicons.font,
@@ -54,7 +59,9 @@ export default class App extends Component {
                 // to remove this if you are not using it in your app
                 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
                 'clear-sans': require('./assets/fonts/ClearSans-Regular.ttf'),
-                'clear-sans-bold': require('./assets/fonts/ClearSans-Bold.ttf')
+                'clear-sans-bold': require('./assets/fonts/ClearSans-Bold.ttf'),
+                'Roboto': require('native-base/Fonts/Roboto.ttf'),
+                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
             }),
         ]);
     };
@@ -69,14 +76,3 @@ export default class App extends Component {
         this.setState({isLoadingComplete: true});
     };
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    statusBarUnderlay: {
-        height: 24,
-        backgroundColor: 'rgba(0,0,0,0.2)',
-    },
-});

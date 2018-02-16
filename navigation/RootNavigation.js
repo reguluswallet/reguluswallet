@@ -1,19 +1,32 @@
-import {Notifications} from 'expo';
-import React from 'react';
-import {StackNavigator} from 'react-navigation';
-
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {StackNavigator, addNavigationHelpers} from 'react-navigation';
+import {
+    createReduxBoundAddListener,
+    createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers';
 import AuthScreen from '../screens/AuthScreen';
+import SetupScreen from '../screens/SetupScreen';
+import ReceiveScreen from '../screens/ReceiveScreen';
 import MainTabNavigator from './MainTabNavigator';
-import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 import {Colors} from '../constants';
 
 const RootStackNavigator = StackNavigator(
     {
-        Main: {
-            screen: MainTabNavigator,
-        },
         Auth: {
             screen: AuthScreen
+        },
+        Receive: {
+            screen: ReceiveScreen
+        },
+        Setup: {
+            screen: SetupScreen
+        },
+        Main: {
+            screen: MainTabNavigator,
+            navigationOptions: {
+                gesturesEnabled: false
+            }
         },
     },
     {
@@ -30,31 +43,37 @@ const RootStackNavigator = StackNavigator(
     }
 );
 
-export default class RootNavigator extends React.Component {
-    componentDidMount() {
-        this._notificationSubscription = this._registerForPushNotifications();
-    }
+const INITIAL_STATE = RootStackNavigator.router.getStateForAction(
+    RootStackNavigator.router.getActionForPathAndParams('Auth')
+);
 
-    componentWillUnmount() {
-        this._notificationSubscription && this._notificationSubscription.remove();
-    }
+export const RootNavigationReducer = (state = INITIAL_STATE, action) => {
+    const nextState = RootStackNavigator.router.getStateForAction(action, state);
 
+    // Simply return the original `state` if `nextState` is null or undefined.
+    return nextState || state;
+};
+
+export const RootNavigationMiddleware = createReactNavigationReduxMiddleware(
+    'root',
+    state => state.nav,
+);
+const addListener = createReduxBoundAddListener('root');
+
+class RootNavigator extends Component {
     render() {
-        return <RootStackNavigator/>;
+        return (
+            <RootStackNavigator navigation={addNavigationHelpers({
+                dispatch: this.props.dispatch,
+                state: this.props.nav,
+                addListener
+            })}/>
+        );
     }
-
-    _registerForPushNotifications() {
-        // Send our push token over to our backend so we can receive notifications
-        // You can comment the following line out if you want to stop receiving
-        // a notification every time you open the app. Check out the source
-        // for this function in api/registerForPushNotificationsAsync.js
-        registerForPushNotificationsAsync();
-
-        // Watch for incoming notifications
-        this._notificationSubscription = Notifications.addListener(this._handleNotification);
-    }
-
-    _handleNotification = ({origin, data}) => {
-        console.log(`Push notification ${origin} with data: ${JSON.stringify(data)}`);
-    };
 }
+
+const mapStateToProps = (state) => ({
+    nav: state.nav
+});
+
+export default connect(mapStateToProps)(RootNavigator);
