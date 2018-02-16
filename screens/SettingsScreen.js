@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View} from 'react-native';
+import {ToggleTouchID, TogglePushNotifications} from '../actions';
 import {Colors, Layout} from '../constants';
 import {Balance, SectionHeader} from '../components';
 
-export default class SettingsScreen extends React.Component {
+class SettingsScreen extends Component {
     static navigationOptions = {
         title: 'Settings',
     };
@@ -11,7 +13,7 @@ export default class SettingsScreen extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-                <Balance>967.3479278</Balance>
+                <Balance>{this.props.balance}</Balance>
                 <SectionHeader>Settings</SectionHeader>
                 <View style={styles.textRow}>
                     <Text style={styles.textRowTitle}>App Version</Text>
@@ -29,11 +31,17 @@ export default class SettingsScreen extends React.Component {
                 <View style={styles.divider}/>
                 <View style={styles.textRow}>
                     <Text style={styles.toggleRowTitle}>Push for Transactions</Text>
-                    <Switch/>
+                    <Switch
+                        value={this.props.push_notifications}
+                        onValueChange={this.props.TogglePushNotifications}
+                    />
                 </View>
                 <View style={styles.textRow}>
                     <Text style={styles.toggleRowTitle}>Touch ID</Text>
-                    <Switch/>
+                    <Switch
+                        value={this.props.touch_id}
+                        onValueChange={this.props.ToggleTouchID}
+                    />
                 </View>
                 <View style={styles.dividerLarge}/>
                 <TouchableOpacity style={styles.signoutRow}>
@@ -46,6 +54,14 @@ export default class SettingsScreen extends React.Component {
         );
     }
 }
+
+const mapStateToProps = ({account, settings}) => {
+    let {id, balance} = account;
+    let {touch_id, push_notifications} = settings;
+    return {id, balance, touch_id, push_notifications};
+};
+
+export default connect(mapStateToProps, {ToggleTouchID, TogglePushNotifications})(SettingsScreen);
 
 const styles = StyleSheet.create({
     container: {
