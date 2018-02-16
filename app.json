@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "regulus-wallet",
-    "description": "A wallet for Stellar.",
+    "name": "Regulus Wallet",
+    "description": "Regulus is an iOS crypto wallet for Stellar Lumens",
     "slug": "regulus-wallet",
     "privacy": "public",
     "sdkVersion": "25.0.0",
