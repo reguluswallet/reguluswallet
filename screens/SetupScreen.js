@@ -1,34 +1,101 @@
 import React, {Component} from 'react';
-import {
-    Animated,
-    Easing,
-    Image,
-    KeyboardAvoidingView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
-import {Button, Container, Text} from 'native-base';
+import {Animated, Easing, Image, StyleSheet, View} from 'react-native';
+import {H1, Button, Container, Text} from 'native-base';
 import Swiper from 'react-native-swiper';
-import StellarSdk from 'stellar-sdk';
-
-import {Logo} from '../components';
+import {SlideBackground} from '../components';
 import {Colors, Layout} from '../constants';
-
-var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 
 export default class SetupScreen extends Component {
     static navigationOptions = {
         header: false,
     };
 
-    constructor() {
-        super();
+    state = {
+        spinValue: new Animated.Value(0)
+    };
+
+    runAnimation() {
+        this.state.spinValue.setValue(0);
+        Animated.timing(
+            this.state.spinValue,
+            {
+                toValue: 1,
+                duration: 10000,
+                easing: Easing.linear,
+                useNativeDriver: true
+            }
+        ).start(() => this.runAnimation());
     }
 
-    _createWallet() {
-        console.log();
+    _renderSlideOne() {
+
+        // First set up animation
+        this.runAnimation();
+
+
+// Second interpolate beginning and end values (in this case 0 and 1)
+        const spin = this.state.spinValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '360deg']
+        });
+
+        return (
+            <View style={styles.slide}>
+                <H1 style={styles.title}>Stellar Network</H1>
+                <Animated.Image style={[{transform: [{rotate: spin}] },styles.networkImage]} source={require('../assets/images/network.png')}/>
+                <View style={styles.infoBox}>
+                    <View style={styles.content}>
+                        <Text style={styles.infoText}>
+                            The first thing you’ll need to do anything on the Stellar network
+                            is an account. Accounts hold all your money inside Stellar and allow you to send and receive
+                            payments—in fact, pretty much everything in Stellar is in some way tied to an
+                            account.
+                        </Text>
+                    </View>
+                    <SlideBackground/>
+                </View>
+            </View>
+        );
+    }
+
+    _renderSlideTwo() {
+        return (
+            <View style={styles.slide}>
+                <H1 style={styles.title}>Accounts</H1>
+                <Image source={require('../assets/images/wallet.png')}/>
+                <View style={styles.infoBox}>
+                    <View style={styles.content}>
+                        <Text style={styles.infoText}>
+                            Accounts are the central data structure in Stellar. Accounts are identified by a public key
+                            and saved in the ledger. Everything else in the ledger, such as offers or trustlines, are
+                            owned by a particular account.
+                        </Text>
+                    </View>
+                    <SlideBackground flipped/>
+                </View>
+            </View>
+        );
+    }
+
+    _renderSlideThree() {
+        return (
+            <View style={styles.slide}>
+                <H1 style={styles.title}>Send and Receive</H1>
+                <Image source={require('../assets/images/send-receive.png')}/>
+                <View style={styles.infoBox}>
+                    <View style={styles.content}>
+                        <Text style={styles.infoText}>
+                            After you create an account, you can send and receive funds through the Stellar network.
+                            Most of the time, you’ll be sending money to someone else who has their own account.
+                        </Text>
+                        <Button block>
+                            <Text>Let's Get Started!</Text>
+                        </Button>
+                    </View>
+                    <SlideBackground/>
+                </View>
+            </View>
+        );
     }
 
     render() {
@@ -40,35 +107,9 @@ export default class SetupScreen extends Component {
                     dotColor={Colors.grey}
                     activeDotColor={Colors.blue}
                 >
-                    <View style={styles.slide}>
-                        <View style={styles.slide1}>
-                            <View style={styles.slideTop}>
-                                <Image
-                                    source={require('../assets/images/wallet.png')}
-                                    style={styles.wallet}
-                                />
-                                <Text style={styles.text}>Click "Create Wallet" to generate key pair for a new account. If you already have a key pair, click "Add Exisiting Wallet"</Text>
-                            </View>
-                            <View style={styles.slideBottom}>
-                                <View style={styles.buttons}>
-                                <Button block style={styles.mb} onPress={() => {
-                                    this._createWallet();
-                                }}>
-                                    <Text>Create Wallet</Text>
-                                </Button>
-                                <Button dark bordered block>
-                                    <Text>Add Existing</Text>
-                                </Button>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                    <View style={styles.slide2}>
-                        <Text style={styles.text}>Beautiful</Text>
-                    </View>
-                    <View style={styles.slide3}>
-                        <Text style={styles.text}>And simple</Text>
-                    </View>
+                    {this._renderSlideOne()}
+                    {this._renderSlideTwo()}
+                    {this._renderSlideThree()}
                 </Swiper>
             </Container>
         );
@@ -76,49 +117,36 @@ export default class SetupScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    wrapper: {},
     slide: {
         flex: 1,
+        backgroundColor: Colors.lightBlue,
+        alignItems: 'center'
+    },
+    content: {
+        position: 'absolute',
+        zIndex: 2,
+        flex: 1,
+        height: Layout.window.height / 2,
+        width: Layout.window.width,
         padding: Layout.gutter,
-        paddingBottom: Layout.gutter * 4,
-        backgroundColor: Colors.lightBlue,
+        justifyContent: 'center'
     },
-    slide1: {
-        flex: 1,
-        flexDirection: 'column'
+    infoText: {
+        textAlign: 'center',
+        marginBottom: Layout.gutter * 2
     },
-    slideTop: {
-        flex: 2,
-        alignItems: 'center',
-        justifyContent: 'flex-end'
+    infoBox: {
+        position: 'absolute',
+        bottom: 0
     },
-    slideBottom: {
-        flex: 1,
-        flexDirection: 'row',
+    networkImage: {
+        position: 'absolute',
+        top: Layout.window.height * 0.25
     },
-    buttons: {
-        flex: 1,
-        alignSelf: 'flex-end',
+    title: {
+        color: Colors.blue,
+        textAlign: 'center',
+        marginTop: Layout.gutter * 4,
+        marginBottom: Layout.gutter * 4
     },
-    mb: {
-        marginBottom: Layout.gutter
-    },
-    slide2: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Colors.lightBlue,
-    },
-    slide3: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: Colors.lightBlue,
-    },
-    wallet: {
-        marginBottom: Layout.gutter
-    },
-    text: {
-        textAlign: 'center'
-    }
 });

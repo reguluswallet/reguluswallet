@@ -1,31 +1,30 @@
 import './global';
 import React, {Component} from 'react';
-import {StatusBar, StyleSheet, View} from 'react-native';
+import {StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
-import {createStore, applyMiddleware} from 'redux';
-import ReduxThunk from 'redux-thunk';
 import {AppLoading, Asset, Font} from 'expo';
 import {Ionicons} from '@expo/vector-icons';
 import {Root, StyleProvider} from 'native-base';
 import getTheme from './native-base-theme/components'
 import firebase from 'firebase';
-import reducers from './reducers';
 import RootNavigation from './navigation/RootNavigation';
-import {RootNavigationMiddleware} from './navigation/RootNavigation';
 import Config from './config';
-
-
-const store = createStore(reducers, applyMiddleware(ReduxThunk, RootNavigationMiddleware));
+import {PersistGate} from 'redux-persist/integration/react'
+import {store, persistor} from './store';
 
 firebase.initializeApp(Config.firebase);
 
 export default class App extends Component {
     state = {
         isLoadingComplete: false,
+        authenticated: false,
     };
 
+    componentWillMount() {
+    }
+
     render() {
-        if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+        if (!this.state.isLoadingComplete && !this.state.authenticated) {
             return (
                 <AppLoading
                     startAsync={this._loadResourcesAsync}
@@ -36,12 +35,14 @@ export default class App extends Component {
         } else {
             return (
                 <Provider store={store}>
-                    <StyleProvider style={getTheme()}>
-                        <Root>
-                            <StatusBar barStyle="default"/>
-                            <RootNavigation/>
-                        </Root>
-                    </StyleProvider>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <StyleProvider style={getTheme()}>
+                            <Root>
+                                <StatusBar barStyle="default"/>
+                                <RootNavigation/>
+                            </Root>
+                        </StyleProvider>
+                    </PersistGate>
                 </Provider>
             );
         }
@@ -50,7 +51,9 @@ export default class App extends Component {
     _loadResourcesAsync = async () => {
         return Promise.all([
             Asset.loadAsync([
-                require('./assets/images/wallet.png')
+                require('./assets/images/wallet.png'),
+                require('./assets/images/network.png'),
+                require('./assets/images/send-receive.png')
             ]),
             Font.loadAsync({
                 // This is the font that we are using for our tab bar

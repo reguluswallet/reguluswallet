@@ -8,11 +8,15 @@ import {
 import AuthScreen from '../screens/AuthScreen';
 import SetupScreen from '../screens/SetupScreen';
 import ReceiveScreen from '../screens/ReceiveScreen';
+import LoadingScreen from "../screens/LoadingScreen";
 import MainTabNavigator from './MainTabNavigator';
 import {Colors} from '../constants';
 
 const RootStackNavigator = StackNavigator(
     {
+        Loading: {
+            screen: LoadingScreen
+        },
         Auth: {
             screen: AuthScreen
         },
@@ -44,7 +48,7 @@ const RootStackNavigator = StackNavigator(
 );
 
 const INITIAL_STATE = RootStackNavigator.router.getStateForAction(
-    RootStackNavigator.router.getActionForPathAndParams('Auth')
+    RootStackNavigator.router.getActionForPathAndParams('Loading')
 );
 
 export const RootNavigationReducer = (state = INITIAL_STATE, action) => {

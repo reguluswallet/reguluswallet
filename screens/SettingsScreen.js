@@ -1,14 +1,40 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View} from 'react-native';
-import {ToggleTouchID, TogglePushNotifications} from '../actions';
+import {Logout, ToggleTouchID, TogglePushNotifications} from '../actions';
 import {Colors, Layout} from '../constants';
 import {Balance, SectionHeader} from '../components';
+import {Fingerprint} from 'expo';
 
 class SettingsScreen extends Component {
     static navigationOptions = {
         title: 'Settings',
     };
+
+    state = {
+        fingerprint: false
+    };
+
+    componentWillMount() {
+        const vm = this;
+        Fingerprint.hasHardwareAsync().then((result) => {
+            vm.setState({fingerprint: result})
+        });
+    }
+
+    _renderTouchID() {
+        if (this.state.fingerprint) {
+            return (
+                <View style={styles.textRow}>
+                    <Text style={styles.toggleRowTitle}>Touch ID</Text>
+                    <Switch
+                        value={this.props.touch_id}
+                        onValueChange={this.props.ToggleTouchID}
+                    />
+                </View>
+            )
+        }
+    }
 
     render() {
         return (
@@ -36,15 +62,9 @@ class SettingsScreen extends Component {
                         onValueChange={this.props.TogglePushNotifications}
                     />
                 </View>
-                <View style={styles.textRow}>
-                    <Text style={styles.toggleRowTitle}>Touch ID</Text>
-                    <Switch
-                        value={this.props.touch_id}
-                        onValueChange={this.props.ToggleTouchID}
-                    />
-                </View>
+                {this._renderTouchID()}
                 <View style={styles.dividerLarge}/>
-                <TouchableOpacity style={styles.signoutRow}>
+                <TouchableOpacity style={styles.signoutRow} onPress={this.props.Logout}>
                     <Text style={styles.signoutText}>Sign Out</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.resetRow}>
@@ -61,7 +81,7 @@ const mapStateToProps = ({account, settings}) => {
     return {id, balance, touch_id, push_notifications};
 };
 
-export default connect(mapStateToProps, {ToggleTouchID, TogglePushNotifications})(SettingsScreen);
+export default connect(mapStateToProps, {Logout, ToggleTouchID, TogglePushNotifications})(SettingsScreen);
 
 const styles = StyleSheet.create({
     container: {
