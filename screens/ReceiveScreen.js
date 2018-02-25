@@ -1,15 +1,24 @@
 import React, {Component} from "react";
-import {StyleSheet, View} from "react-native";
-import QRCode from 'react-native-qrcode';
-import {Balance, SectionHeader} from '../components';
-import {Colors, Layout} from '../constants';
 import {connect} from "react-redux";
-import {Container, Content, Button, Text} from "native-base";
+import {Share, StyleSheet, View} from "react-native";
+import QRCode from "react-native-qrcode";
+import {Container, Content, Button, H2, Text} from "native-base";
+import {Balance, SectionHeader} from "../components";
+import {Colors, Layout} from "../constants";
 
 class ReceiveComponent extends Component {
     static navigationOptions = {
         title: 'Receive Payment',
     };
+
+    _share() {
+        Share.share({
+            title: 'Stellar Public Key',
+            message: this.props.public_key
+        }, {
+            subject: 'Stellar Public Key'
+        });
+    }
 
     render() {
         return (
@@ -18,7 +27,7 @@ class ReceiveComponent extends Component {
                 <SectionHeader>Receive Payment</SectionHeader>
                 <Content padder contentContainerStyle={styles.content}>
                     <View>
-                        <Text>Public Key:</Text>
+                        <Text style={styles.bold}>Public Key:</Text>
                         <Text>{this.props.public_key}</Text>
                     </View>
                     <View style={styles.qrcode}>
@@ -29,7 +38,7 @@ class ReceiveComponent extends Component {
                             fgColor={Colors.white}
                         />
                     </View>
-                    <Button block>
+                    <Button block onPress={this._share.bind(this)}>
                         <Text>Share</Text>
                     </Button>
                 </Content>
@@ -50,11 +59,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between'
     },
+    bold: {
+        fontFamily: 'clear-sans-bold'
+    }
 });
 
-const mapStateToProps = (state) => {
-    let {public_key, balance, transactions} = state.account;
-    return {public_key, balance, transactions};
+const mapStateToProps = ({account}) => {
+    let {public_key, balance} = account;
+    return {public_key, balance};
 };
 
 const ReceiveScreen = connect(mapStateToProps)(ReceiveComponent);
