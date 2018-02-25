@@ -4,8 +4,10 @@ import {H1, Button, Container, Text} from 'native-base';
 import Swiper from 'react-native-swiper';
 import {SlideBackground} from '../components';
 import {Colors, Layout} from '../constants';
+import {connect} from "react-redux";
+import {CompleteIntro} from "../actions";
 
-export default class SetupScreen extends Component {
+class SetupScreen extends Component {
     static navigationOptions = {
         header: false,
     };
@@ -27,13 +29,9 @@ export default class SetupScreen extends Component {
         ).start(() => this.runAnimation());
     }
 
-    _renderSlideOne() {
-
-        // First set up animation
+    renderSlideOne() {
         this.runAnimation();
 
-
-// Second interpolate beginning and end values (in this case 0 and 1)
         const spin = this.state.spinValue.interpolate({
             inputRange: [0, 1],
             outputRange: ['0deg', '360deg']
@@ -42,7 +40,10 @@ export default class SetupScreen extends Component {
         return (
             <View style={styles.slide}>
                 <H1 style={styles.title}>Stellar Network</H1>
-                <Animated.Image style={[{transform: [{rotate: spin}] },styles.networkImage]} source={require('../assets/images/network.png')}/>
+                <Animated.Image
+                    style={[{transform: [{rotate: spin}]}, styles.networkImage]}
+                    source={require('../assets/images/network.png')}
+                />
                 <View style={styles.infoBox}>
                     <View style={styles.content}>
                         <Text style={styles.infoText}>
@@ -58,7 +59,7 @@ export default class SetupScreen extends Component {
         );
     }
 
-    _renderSlideTwo() {
+    renderSlideTwo() {
         return (
             <View style={styles.slide}>
                 <H1 style={styles.title}>Accounts</H1>
@@ -77,7 +78,7 @@ export default class SetupScreen extends Component {
         );
     }
 
-    _renderSlideThree() {
+    renderSlideThree() {
         return (
             <View style={styles.slide}>
                 <H1 style={styles.title}>Send and Receive</H1>
@@ -88,7 +89,7 @@ export default class SetupScreen extends Component {
                             After you create an account, you can send and receive funds through the Stellar network.
                             Most of the time, you’ll be sending money to someone else who has their own account.
                         </Text>
-                        <Button block>
+                        <Button block onPress={this.props.CompleteIntro}>
                             <Text>Let's Get Started!</Text>
                         </Button>
                     </View>
@@ -107,14 +108,16 @@ export default class SetupScreen extends Component {
                     dotColor={Colors.grey}
                     activeDotColor={Colors.blue}
                 >
-                    {this._renderSlideOne()}
-                    {this._renderSlideTwo()}
-                    {this._renderSlideThree()}
+                    {this.renderSlideOne()}
+                    {this.renderSlideTwo()}
+                    {this.renderSlideThree()}
                 </Swiper>
             </Container>
         );
     }
 }
+
+export default connect(null, {CompleteIntro})(SetupScreen);
 
 const styles = StyleSheet.create({
     slide: {

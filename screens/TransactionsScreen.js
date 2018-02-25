@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {
+    Image,
     ListView,
     StyleSheet,
     View,
 } from 'react-native';
 import {connect} from 'react-redux';
+import {Button, Icon, Container, Header, Left, Right, Body, Title, H1, Text} from 'native-base';
 import stellar from 'stellar-sdk';
 import {LoadAccount, LoadOperations} from '../actions';
 import TransactionRow from '../components/TransactionRow';
@@ -19,8 +21,8 @@ class TransactionsScreen extends Component {
     };
 
     componentWillMount() {
-        this.props.LoadAccount(this.props.id);
-        this.props.LoadOperations(this.props.id);
+        this.props.LoadAccount(this.props.public_key);
+        this.props.LoadOperations(this.props.public_key);
         this.createDataSource(this.props);
     }
 
@@ -37,18 +39,18 @@ class TransactionsScreen extends Component {
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                <Balance>{this.props.balance}</Balance>
-                <ListView
-                    enableEmptySections
-                    dataSource={this.dataSource}
-                    renderRow={item => <TransactionRow item={item}/>}
-                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
-                    renderHeader={() => <SectionHeader>Transactions</SectionHeader>}
-                />
-            </View>
-        );
+            return (
+                <View style={styles.container}>
+                    <Balance>{this.props.balance}</Balance>
+                    <ListView
+                        enableEmptySections
+                        dataSource={this.dataSource}
+                        renderRow={item => <TransactionRow item={item}/>}
+                        renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
+                        renderHeader={() => <SectionHeader>Transactions</SectionHeader>}
+                    />
+                </View>
+            );
     }
 }
 
@@ -62,12 +64,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: Colors.white,
+    },
+    content: {
+        padding: Layout.gutter,
+        flex: 1,
+        alignItems: 'center',
     }
 });
 
-const mapStateToProps = ({account}) => {
-    let {id, balance, transactions} = account;
-    return {id, balance, transactions};
+const mapStateToProps = (state) => {
+    let {public_key, balance, transactions} = state.account;
+    return {public_key, balance, transactions};
 };
 
 export default connect(mapStateToProps, {LoadAccount, LoadOperations})(TransactionsScreen);

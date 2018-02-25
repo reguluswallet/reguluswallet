@@ -6,8 +6,8 @@ import {TabNavigator, TabBarBottom} from 'react-navigation';
 import {Colors} from '../constants';
 
 import TransactionsScreen from '../screens/TransactionsScreen';
-import PaymentsScreen from '../screens/PaymentsScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import {Layout} from "../constants/Layout";
+import {PaymentsScreen, ReceiveScreen, SettingsScreen} from "../screens";
 
 export default TabNavigator(
     {
@@ -16,6 +16,9 @@ export default TabNavigator(
         },
         Payments: {
             screen: PaymentsScreen,
+        },
+        Receive: {
+            screen: ReceiveScreen
         },
         Settings: {
             screen: SettingsScreen,
@@ -32,7 +35,10 @@ export default TabNavigator(
                             Platform.OS === 'ios' ? 'ios-menu' : 'md-menu';
                         break;
                     case 'Payments':
-                        iconName = Platform.OS === 'ios' ? 'ios-card' : 'md-card';
+                        iconName = Platform.OS === 'ios' ? 'ios-arrow-dropup' : 'md-card';
+                        break;
+                    case 'Receive':
+                        iconName = Platform.OS === 'ios' ? 'ios-arrow-dropdown' : 'md-card';
                         break;
                     case 'Settings':
                         iconName =
@@ -47,17 +53,36 @@ export default TabNavigator(
                     />
                 );
             },
+            tabBarLabel: ({focused}) => {
+                const {routeName} = navigation.state;
+                switch (routeName) {
+                    case 'Transactions':
+                        return 'Transactions';
+                    case 'Payments':
+                        return 'Send';
+                    case 'Receive':
+                        return 'Receive';
+                    case 'Settings':
+                        return 'Settings'
+                }
+            },
         }),
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',
         animationEnabled: false,
         swipeEnabled: false,
         tabBarOptions: {
-            showLabel: false,
             style: {
                 height: 60,
-                backgroundColor: '#d4eef7',
+                backgroundColor: Colors.lightBlue,
                 borderTopColor: '#d4d4d4'
+            },
+            activeTintColor: Colors.blue,
+            inactiveTintColor: Colors.darkGrey,
+            labelStyle: {
+                fontFamily: 'clear-sans',
+                fontSize: 12,
+                marginBottom: Layout.gutter / 2
             }
         }
     }

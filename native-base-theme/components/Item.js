@@ -114,21 +114,24 @@ export default (variables = variable) => {
             "NativeBase.Icon": {
                 paddingLeft: 10
             },
+            "NativeBase.Label": {
+                marginBottom: 5
+            },
             ".success": {
                 borderColor: variables.inputSuccessBorderColor
             },
             ".error": {
                 borderColor: variables.inputErrorBorderColor
             },
-            borderWidth: variables.borderWidth * 3,
-            borderColor: variables.inputBorderColor
         },
         ".top": {
             borderTopLeftRadius: variables.borderRadiusBase,
             borderTopRightRadius: variables.borderRadiusBase,
+            marginBottom: 0
         },
         ".middle": {
             borderTopWidth: 0,
+            marginBottom: 0
         },
         ".bottom": {
             borderTopWidth: 0,
@@ -152,7 +155,6 @@ export default (variables = variable) => {
             borderRadius: 30,
             borderColor: variables.inputBorderColor
         },
-
         ".success": {
             "NativeBase.Icon": {
                 color: variables.inputSuccessBorderColor
@@ -176,7 +178,6 @@ export default (variables = variable) => {
             },
             borderColor: variables.inputSuccessBorderColor
         },
-
         ".error": {
             "NativeBase.Icon": {
                 color: variables.inputErrorBorderColor
@@ -208,15 +209,9 @@ export default (variables = variable) => {
                 color: "#384850"
             }
         },
-
-        borderWidth: variables.borderWidth * 2,
-        borderTopWidth: 0,
-        borderRightWidth: 0,
-        borderLeftWidth: 0,
-        borderColor: variables.inputBorderColor,
-        backgroundColor: Colors.white,
-        flexDirection: "row",
-        alignItems: "center",
+        backgroundColor: "transparent",
+        flexDirection: "column",
+        marginBottom: variables.contentPadding
     };
 
     return itemTheme;

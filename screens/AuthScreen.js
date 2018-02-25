@@ -1,37 +1,31 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, {Component} from "react";
+import {connect} from "react-redux";
 import {
     Animated,
     Easing,
-    KeyboardAvoidingView,
     StyleSheet,
-    TextInput,
     View,
-} from 'react-native';
+} from "react-native";
 import {Button, Content, Container, Text, Item, Input} from 'native-base';
 import {Login, LoginAnonymously, Register} from '../actions';
 import {Logo} from '../components';
 import {Colors, Layout} from '../constants';
 
-class AuthScreen extends Component {
+class AuthComponent extends Component {
     static navigationOptions = {
         header: false,
     };
 
-    constructor() {
-        super();
-
-        this.state = {
-            animate_view: new Animated.Value(0),
-            login_email: undefined,
-            login_password: undefined,
-            login_error: false,
-            register_email: undefined,
-            register_password: undefined,
-            register_confirm_password: undefined,
-            register_error: false
-        }
-    }
+    state = {
+        animate_view: new Animated.Value(0),
+        login_email: undefined,
+        login_password: undefined,
+        login_error: false,
+        register_email: undefined,
+        register_password: undefined,
+        register_confirm_password: undefined,
+        register_error: false
+    };
 
     _register() {
         let {register_email, register_password, register_confirm_password} = this.state;
@@ -121,97 +115,96 @@ class AuthScreen extends Component {
     render() {
         return (
             <Container>
-                <KeyboardAvoidingView
-                    style={styles.container}
-                    keyboardVerticalOffset={0}
-                    behavior="padding"
-                >
-                    <View>
-                        <Logo/>
-                        <View style={styles.auth}>
-                            <Animated.View style={[styles.loginContainer, {left: this.state.animate_view}]}>
-                                <Item regular top error={this.state.login_error}>
-                                    <Input
-                                        ref="LoginEmailInput"
-                                        autoFocus
-                                        selectionColor={Colors.tintColor}
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        returnKeyType="next"
-                                        keyboardType="email-address"
-                                        placeholder="E-mail Address"
-                                        placeholderTextColor={Colors.grey}
-                                        onChangeText={email => this.setState({login_email: email})}
-                                        onSubmitEditing={() => {
-                                            this.refs.PasswordInput.wrappedInstance.focus()
-                                        }}
-                                    />
-                                </Item>
-                                <Item regular bottom error={this.state.login_error} style={styles.mb}>
-                                    <Input
-                                        ref="PasswordInput"
-                                        secureTextEntry
-                                        selectionColor={Colors.tintColor}
-                                        onChangeText={password => this.setState({login_password: password})}
-                                        placeholder="Password"
-                                        placeholderTextColor={Colors.grey}
-                                    />
-                                </Item>
-                                <Button block onPress={this._login.bind(this)}>
-                                    <Text>Login</Text>
-                                </Button>
-                                <Button block onPress={this.props.LoginAnonymously}>
-                                    <Text>Login Anonymously</Text>
-                                </Button>
-                                <Button block transparent dark onPress={this._goToRegisterView.bind(this)}>
-                                    <Text>Need An account? Register Here</Text>
-                                </Button>
-                            </Animated.View>
-                            <Animated.View style={[styles.registerContainer, {left: this.state.animate_view}]}>
-                                <Item regular top error={this.state.register_error}>
-                                    <Input
-                                        ref="RegisterEmailInput"
-                                        autoFocus
-                                        selectionColor={Colors.tintColor}
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        onChangeText={email => this.setState({register_email: email})}
-                                        returnKeyType="next"
-                                        keyboardType="email-address"
-                                        placeholder="E-mail Address"
-                                        placeholderTextColor={Colors.grey}
-                                    />
-                                </Item>
-                                <Item regular middle error={this.state.register_error}>
-                                    <Input
-                                        ref="PasswordInput"
-                                        secureTextEntry
-                                        selectionColor={Colors.tintColor}
-                                        onChangeText={password => this.setState({register_password: password})}
-                                        placeholder="Password"
-                                        placeholderTextColor={Colors.grey}
-                                    />
-                                </Item>
-                                <Item regular bottom error={this.state.register_error} style={styles.mb}>
-                                    <Input
-                                        ref="PasswordInput"
-                                        selectionColor={Colors.tintColor}
-                                        onChangeText={password => this.setState({register_confirm_password: password})}
-                                        secureTextEntry
-                                        placeholder="Confirm Password"
-                                        placeholderTextColor={Colors.grey}
-                                    />
-                                </Item>
-                                <Button block onPress={this._register.bind(this)}>
-                                    <Text>Register</Text>
-                                </Button>
-                                <Button block transparent dark onPress={this._goToLoginView.bind(this)}>
-                                    <Text>Already Have An Account? Login Here</Text>
-                                </Button>
-                            </Animated.View>
-                        </View>
+                <Content style={styles.content}>
+                    <Logo/>
+                    <View style={styles.auth}>
+                        <Animated.View style={[styles.loginContainer, {left: this.state.animate_view}]}>
+                            <Item regular top error={this.state.login_error}>
+                                <Input
+                                    top
+                                    ref="LoginEmailInput"
+                                    autoFocus
+                                    selectionColor={Colors.tintColor}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    returnKeyType="next"
+                                    keyboardType="email-address"
+                                    placeholder="E-mail Address"
+                                    placeholderTextColor={Colors.grey}
+                                    onChangeText={email => this.setState({login_email: email})}
+                                    onSubmitEditing={() => {
+                                        this.refs.PasswordInput.wrappedInstance.focus()
+                                    }}
+                                />
+                            </Item>
+                            <Item regular bottom error={this.state.login_error}>
+                                <Input
+                                    bottom
+                                    ref="PasswordInput"
+                                    secureTextEntry
+                                    selectionColor={Colors.tintColor}
+                                    onChangeText={password => this.setState({login_password: password})}
+                                    placeholder="Password"
+                                    placeholderTextColor={Colors.grey}
+                                />
+                            </Item>
+                            <Button block onPress={this._login.bind(this)}>
+                                <Text>Login</Text>
+                            </Button>
+                            <Button block onPress={this.props.LoginAnonymously}>
+                                <Text>Login Anonymously</Text>
+                            </Button>
+                            <Button block transparent dark onPress={this._goToRegisterView.bind(this)}>
+                                <Text>Need An account? Register Here</Text>
+                            </Button>
+                        </Animated.View>
+                        <Animated.View style={[styles.registerContainer, {left: this.state.animate_view}]}>
+                            <Item regular top error={this.state.register_error}>
+                                <Input
+                                    top
+                                    ref="RegisterEmailInput"
+                                    autoFocus
+                                    selectionColor={Colors.tintColor}
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    onChangeText={email => this.setState({register_email: email})}
+                                    returnKeyType="next"
+                                    keyboardType="email-address"
+                                    placeholder="E-mail Address"
+                                    placeholderTextColor={Colors.grey}
+                                />
+                            </Item>
+                            <Item regular middle error={this.state.register_error}>
+                                <Input
+                                    middle
+                                    ref="PasswordInput"
+                                    secureTextEntry
+                                    selectionColor={Colors.tintColor}
+                                    onChangeText={password => this.setState({register_password: password})}
+                                    placeholder="Password"
+                                    placeholderTextColor={Colors.grey}
+                                />
+                            </Item>
+                            <Item regular bottom error={this.state.register_error}>
+                                <Input
+                                    bottom
+                                    ref="PasswordInput"
+                                    selectionColor={Colors.tintColor}
+                                    onChangeText={password => this.setState({register_confirm_password: password})}
+                                    secureTextEntry
+                                    placeholder="Confirm Password"
+                                    placeholderTextColor={Colors.grey}
+                                />
+                            </Item>
+                            <Button block onPress={this._register.bind(this)}>
+                                <Text>Register</Text>
+                            </Button>
+                            <Button block transparent dark onPress={this._goToLoginView.bind(this)}>
+                                <Text>Already Have An Account? Login Here</Text>
+                            </Button>
+                        </Animated.View>
                     </View>
-                </KeyboardAvoidingView>
+                </Content>
             </Container>
         );
     }
@@ -221,7 +214,9 @@ const mapStateToProps = state => ({
     state
 });
 
-export default connect(mapStateToProps, {Login, LoginAnonymously, Register})(AuthScreen);
+const AuthScreen = connect(mapStateToProps, {Login, LoginAnonymously, Register})(AuthComponent);
+
+export {AuthScreen};
 
 const styles = StyleSheet.create({
     auth: {
@@ -235,12 +230,9 @@ const styles = StyleSheet.create({
         width: Layout.window.width,
         padding: Layout.gutter
     },
-    container: {
+    content: {
         flex: 1,
         backgroundColor: Colors.lightBlue,
-        justifyContent: 'center'
-    },
-    mb: {
-        marginBottom: Layout.gutter
+        paddingTop: Layout.gutter * 4
     }
 });

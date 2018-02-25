@@ -1,6 +1,7 @@
 import './global';
 import React, {Component} from 'react';
-import {StatusBar} from 'react-native';
+import {NavigationActions} from 'react-navigation';
+import {AsyncStorage, AppState, StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import {AppLoading, Asset, Font} from 'expo';
 import {Ionicons} from '@expo/vector-icons';
@@ -11,6 +12,13 @@ import RootNavigation from './navigation/RootNavigation';
 import Config from './config';
 import {PersistGate} from 'redux-persist/integration/react'
 import {store, persistor} from './store';
+import Sentry from 'sentry-expo';
+import {LOCK, UNLOCK} from "./constants/types";
+
+
+Sentry.enableInExpoDevelopment = true;
+// import { SentrySeverity, SentryLog } from 'react-native-sentry';
+Sentry.config('https://0640d0a03ec34f9b8c810ba3b3b341fe@sentry.io/290824').install();
 
 firebase.initializeApp(Config.firebase);
 
@@ -18,10 +26,36 @@ export default class App extends Component {
     state = {
         isLoadingComplete: false,
         authenticated: false,
+        appState: AppState.currentState
     };
 
-    componentWillMount() {
+    componentDidMount() {
+        AppState.addEventListener('change', this._handleAppStateChange);
     }
+
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
+
+    _handleAppStateChange = (nextAppState) => {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+            // If TouchID is available and enabled?
+            // If pin is set?
+            store.dispatch({type: UNLOCK});
+            store.dispatch(
+                NavigationActions.back()
+            )
+        }
+        else {
+            store.dispatch({type: LOCK});
+            store.dispatch(
+                NavigationActions.navigate({
+                    routeName: 'Splash'
+                }))
+
+        }
+        this.setState({appState: nextAppState});
+    };
 
     render() {
         if (!this.state.isLoadingComplete && !this.state.authenticated) {
@@ -58,13 +92,8 @@ export default class App extends Component {
             Font.loadAsync({
                 // This is the font that we are using for our tab bar
                 ...Ionicons.font,
-                // We include SpaceMono because we use it in HomeScreen.js. Feel free
-                // to remove this if you are not using it in your app
-                'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
                 'clear-sans': require('./assets/fonts/ClearSans-Regular.ttf'),
                 'clear-sans-bold': require('./assets/fonts/ClearSans-Bold.ttf'),
-                'Roboto': require('native-base/Fonts/Roboto.ttf'),
-                'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
             }),
         ]);
     };

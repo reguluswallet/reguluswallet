@@ -1,34 +1,32 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import {Text} from '../../components';
-import {Colors, Layout} from '../../constants';
+import React, {Component} from "react";
+import {ActivityIndicator} from "react-native";
+import {Button as NBButton, Text} from "native-base";
+import {Colors} from "../../constants";
+import {connect} from "react-redux";
 
-const Button = ({ onPress, children }) => {
-    const { button, text } = styles;
+class ButtonComponent extends Component {
+    renderButtonChild() {
+        if (this.props.loading) {
+             return <ActivityIndicator color={Colors.white}/>
+        }
 
-    return (
-        <TouchableOpacity activeOpacity={0.5} onPress={onPress} style={button}>
-            <Text style={text}>
-                {children}
-            </Text>
-        </TouchableOpacity>
-    );
-};
-
-const styles = {
-    text: {
-        alignSelf: 'center',
-        color: Colors.white,
-        lineHeight: 20,
-        paddingTop: Layout.gutter,
-        paddingBottom: Layout.gutter
-    },
-    button: {
-        alignSelf: 'stretch',
-        backgroundColor: Colors.blue,
-        borderRadius: Layout.radius,
-        marginBottom: Layout.gutter / 2
+        return <Text>{this.props.children}</Text>;
     }
+
+    render() {
+    return (
+        <NBButton {...this.props} disabled={this.props.loading}>
+            {this.renderButtonChild()}
+        </NBButton>
+    );
+    }
+}
+
+const mapStateToProps = ({app}) => {
+    let {loading} = app;
+    return {loading};
 };
 
-export { Button };
+const Button = connect(mapStateToProps)(ButtonComponent);
+
+export {Button};

@@ -1,6 +1,6 @@
 import {NavigationActions} from 'react-navigation';
 import firebase from 'firebase';
-import {SET_USER, TOGGLE_COMPLETED_SETUP} from "../constants/types";
+import {LOCK, RESET, SET_USER, TOGGLE_COMPLETED_SETUP} from "../constants/types";
 
 const getNavigationAction = (route) => {
     return NavigationActions.reset({
@@ -11,6 +11,16 @@ const getNavigationAction = (route) => {
             })
         ]
     });
+};
+
+export const Reset = () => {
+    return {type: RESET};
+};
+
+export const Back = () => {
+    return (dispatch) => {
+        dispatch(NavigationActions.back())
+    }
 };
 
 export const Login = (email, password) => {
@@ -64,5 +74,32 @@ export const InitialRoute = (route) => {
     return (dispatch) => {
         // dispatch({type: TOGGLE_COMPLETED_SETUP});
         dispatch(getNavigationAction(route))
+    }
+};
+
+export const Route = (route) => {
+    return (dispatch) => {
+        dispatch(
+            NavigationActions.navigate({
+                routeName: route
+            })
+        )
+    }
+};
+
+export const CompleteIntro = () => {
+    return (dispatch) => {
+        dispatch({type: TOGGLE_COMPLETED_SETUP});
+        dispatch(getNavigationAction('NoWallet'));
+    }
+};
+
+export const Lock = () => {
+    return (dispatch) => {
+        dispatch({type: LOCK});
+        dispatch(
+            NavigationActions.navigate({
+                routeName: 'Splash'
+            }));
     }
 };

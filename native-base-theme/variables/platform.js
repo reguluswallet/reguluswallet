@@ -26,7 +26,7 @@ export default {
 
     // Button
     btnFontFamily: "clear-sans",
-    btnDisabledBg: "#b5b5b5",
+    btnDisabledBg: Colors.blue,
     buttonPadding: 15,
     get btnPrimaryBg() {
         return this.brandPrimary;
@@ -118,7 +118,7 @@ export default {
 
     // Footer
     footerHeight: isIphoneX ? 89 : 55,
-    footerDefaultBg: platform === "ios" ? "#F8F8F8" : "#4179F7",
+    footerDefaultBg: platform === "ios" ? Colors.lightBlue : "#4179F7",
     footerPaddingBottom: isIphoneX ? 34 : 0,
 
     // FooterTab
@@ -131,7 +131,7 @@ export default {
 
     // Header
     toolbarBtnColor: platform === "ios" ? "#007aff" : "#fff",
-    toolbarDefaultBg: platform === "ios" ? "#F8F8F8" : "#3F51B5",
+    toolbarDefaultBg: platform === "ios" ? Colors.lightBlue : "#3F51B5",
     toolbarHeight: platform === "ios" ? (isIphoneX ? 88 : 64) : 56,
     toolbarSearchIconSize: platform === "ios" ? 20 : 23,
     toolbarInputColor: platform === "ios" ? "#CECDD2" : "#fff",
@@ -177,9 +177,9 @@ export default {
     lineHeight: platform === "ios" ? 20 : 24,
 
     // List
-    listBg: "transparent",
+    listBg: Colors.white,
     listBorderColor: "#c9c9c9",
-    listDividerBg: "#f4f4f4",
+    listDividerBg: Colors.lightGrey,
     listBtnUnderlayColor: "#DDD",
     listItemPadding: platform === "ios" ? 10 : 12,
     listNoteColor: "#808080",

@@ -44,7 +44,7 @@ class TransactionRow extends Component {
         let {item} = this.props;
 
         const from = item.from.substr(0, 4);
-        const sign = (item.source_account === this.props.id) ? 'negative' : 'positive';
+        const sign = (item.source_account === this.props.public_key) ? 'negative' : 'positive';
 
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={this.onRowPress.bind(this)}>
@@ -69,8 +69,8 @@ class TransactionRow extends Component {
 }
 
 const mapStateToProps = ({account}) => {
-    let {id, balance, transactions} = account;
-    return {id, balance, transactions};
+    let {public_key, balance, transactions} = account;
+    return {public_key, balance, transactions};
 };
 
 export default connect(mapStateToProps)(TransactionRow);

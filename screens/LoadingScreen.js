@@ -1,29 +1,33 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {ActivityIndicator, StyleSheet} from 'react-native';
-import {Container} from 'native-base';
-import {LogoImage} from '../components';
-import {Colors} from '../constants';
-import {InitialRoute} from "../actions";
-import {Fingerprint} from 'expo';
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {ActivityIndicator, StyleSheet} from "react-native";
+import {Container} from "native-base";
+import firebase from "firebase";
+import {Colors} from "../constants";
+import {InitialRoute, Reset} from "../actions";
 
-class LoadingScreen extends Component {
+class LoadingComponent extends Component {
     static navigationOptions = {
         header: false,
     };
 
     componentWillMount() {
+        // this.props.Reset();
         let vm = this;
-        Fingerprint.authenticateAsync().then((results) => {
+
+        firebase.auth().onAuthStateChanged((user) => {
             let route = 'Auth';
-            if (vm.props.app.user) {
-                if (vm.props.app.completedSetup) {
-                    route = 'Main';
+            if (user) {
+                if (vm.props.app.completed_setup) {
+                    if (vm.props.app.accounts.length > 0) {
+                        route = 'Main';
+                    } else {
+                        route = 'NoWallet';
+                    }
                 } else {
                     route = 'Setup';
                 }
             }
-            route = 'Setup';
 
             vm.props.InitialRoute(route)
         });
@@ -32,8 +36,7 @@ class LoadingScreen extends Component {
     render() {
         return (
             <Container style={styles.container}>
-                <LogoImage/>
-                <ActivityIndicator/>
+                <ActivityIndicator color={Colors.blue}/>
             </Container>
         );
     }
@@ -43,7 +46,9 @@ const mapStateToProps = state => ({
     app: state.app
 });
 
-export default connect(mapStateToProps, {InitialRoute})(LoadingScreen);
+const LoadingScreen = connect(mapStateToProps, {Reset, InitialRoute})(LoadingComponent);
+
+export {LoadingScreen};
 
 const styles = StyleSheet.create({
     container: {

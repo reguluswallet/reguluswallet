@@ -1,79 +1,87 @@
-import React, { Component } from 'react';
-import { Picker, TouchableOpacity, Text, TextInput, StyleSheet, View } from 'react-native';
-import QRCode from 'react-native-qrcode';
-import { Balance, Button, Input, InputInfo, SectionHeader } from '../components';
-import { Colors, Layout } from '../constants';
+import React, {Component} from "react";
+import {StyleSheet} from "react-native";
+import {Balance, SectionHeader} from "../components";
+import {Colors} from '../constants/Colors';
+import {Button, Container, Content, Text, Form, Item, Label, Input, Icon} from "native-base";
+import {connect} from "react-redux";
 
-export default class PaymentsScreen extends Component {
+class PaymentsComponent extends Component {
     static navigationOptions = {
         title: 'Send Payment',
     };
 
+    state = {
+        memo: false,
+        memo_text: 'Add Memo'
+    };
+
+    _toggleMemoBox() {
+        let text = (this.state.memo) ? 'Add Memo' : 'Cancel';
+        this.setState({memo: !this.state.memo, memo_text: text});
+    }
+
+    _renderMemoBox() {
+        if (this.state.memo) {
+            return (
+                <Item regular>
+                    <Input
+                        placeholder="Up to 28 characters"
+                        multiline={true}
+                        style={styles.memoInput}
+                    />
+                </Item>
+            )
+        }
+    }
+
     render() {
         return (
-            <View style={styles.container}>
-                <Balance>967.3479278</Balance>
+            <Container>
+                <Balance>{this.props.balance}</Balance>
                 <SectionHeader>Send Payment</SectionHeader>
-                <View style={styles.padded}>
-                    <Input label="To" placeholder="Recipient's public key or address" />
-                    <InputInfo label="Amount" placeholder="Amount to send" />
-                    <View style={styles.textContainer}>
-                        <TouchableOpacity style={styles.textButton}>
-                            <Text style={styles.text}>Add Memo</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <TextInput
-                        style={styles.memo}
-                        placeholder="Up to 28 characters"
-                        multiline={true} />
-                    <Button>Send Lumens</Button>
-                    {/* <QRCode
-                    value="GD37245DE23W6I2JRULHEA22Y35XDVPGEXJ43W7TWWXORWIBDZC7JHCS"
-                    size={150}
-                    bgColor='#545D6F'
-                    fgColor='white'
-                    /> */}
-                </View>
-            </View>
+                <Content padder>
+                    <Form>
+                        <Item regular>
+                            <Label>To:</Label>
+                            <Input placeholder="Recipient's public key or address"/>
+                        </Item>
+                        <Item regular>
+                            <Label>Amount:</Label>
+                            <Input placeholder="Amount to send"/>
+                        </Item>
+                        <Button transparent dark style={styles.memoButton} onPress={this._toggleMemoBox.bind(this)}>
+                            <Text style={styles.memoButtonText}>{this.state.memo_text}</Text>
+                        </Button>
+                        {this._renderMemoBox()}
+                    </Form>
+                    <Button block>
+                        <Text>Send Lumens</Text>
+                    </Button>
+                </Content>
+            </Container>
         );
     }
 }
 
+const mapStateToProps = (state) => {
+    let {public_key, balance, transactions} = state.account;
+    return {public_key, balance, transactions};
+};
+
+const PaymentsScreen = connect(mapStateToProps)(PaymentsComponent);
+
+export {PaymentsScreen};
+
 const styles = StyleSheet.create({
-    memo: {
-        color: Colors.darkGrey,
-        padding: Layout.gutter,
-        fontSize: 16,
-        lineHeight: 20,
-        borderRadius: 5,
-        borderWidth: 1,
-        borderColor: Colors.grey,
-        fontFamily: 'clear-sans',
-        height: 80,
-        marginBottom: Layout.gutter
+    memoInput: {
+        height: 100
     },
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
+    memoButton: {
+        alignSelf: 'flex-end'
     },
-    padded: {
-        padding: Layout.gutter
-    },
-    textContainer: {
-        alignItems: 'flex-end',
-        marginBottom: Layout.gutter
-    },
-    textButton: {
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingRight: Layout.gutter,
-        paddingLeft: Layout.gutter
-    },
-    text: {
-        fontFamily: 'clear-sans',
+    memoButtonText: {
         textDecorationLine: 'underline',
         textDecorationStyle: 'solid',
         textDecorationColor: Colors.darkGrey,
-        color: Colors.darkGrey
     }
 });

@@ -5,12 +5,11 @@ import {
     createReduxBoundAddListener,
     createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
-import AuthScreen from '../screens/AuthScreen';
 import SetupScreen from '../screens/SetupScreen';
-import ReceiveScreen from '../screens/ReceiveScreen';
-import LoadingScreen from "../screens/LoadingScreen";
 import MainTabNavigator from './MainTabNavigator';
 import {Colors} from '../constants';
+import SplashScreen from "../screens/SplashScreen";
+import {AddWalletScreen, AuthScreen, LoadingScreen, NoWalletScreen} from "../screens";
 
 const RootStackNavigator = StackNavigator(
     {
@@ -20,11 +19,11 @@ const RootStackNavigator = StackNavigator(
         Auth: {
             screen: AuthScreen
         },
-        Receive: {
-            screen: ReceiveScreen
-        },
         Setup: {
             screen: SetupScreen
+        },
+        NoWallet: {
+            screen: NoWalletScreen
         },
         Main: {
             screen: MainTabNavigator,
@@ -32,16 +31,22 @@ const RootStackNavigator = StackNavigator(
                 gesturesEnabled: false
             }
         },
+        Splash: {
+            screen: SplashScreen
+        },
+        AddWallet: {
+            screen: AddWalletScreen
+        }
     },
     {
+        // mode: 'modal',
         navigationOptions: () => ({
+            headerTintColor: Colors.tintColor,
             headerStyle: {
                 backgroundColor: '#d4eef7'
             },
             headerTitleStyle: {
-                fontFamily: 'clear-sans',
-                fontWeight: 'normal',
-                color: Colors.tintColor
+                fontFamily: 'clear-sans-bold',
             },
         }),
     }

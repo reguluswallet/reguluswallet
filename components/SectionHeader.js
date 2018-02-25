@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.grey
     },
     text: {
-        fontFamily: 'clear-sans',
+        fontFamily: 'clear-sans-bold',
         fontSize: 18,
         color: Colors.darkGrey
     }
