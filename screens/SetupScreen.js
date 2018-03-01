@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Animated, Easing, Image, StyleSheet, View} from 'react-native';
-import {H1, Button, Container, Text} from 'native-base';
+import {Button, Container, H1, Text} from 'native-base';
 import Swiper from 'react-native-swiper';
 import {SlideBackground} from '../components';
 import {Colors, Layout} from '../constants';

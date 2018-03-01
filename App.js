@@ -1,7 +1,7 @@
 import './global';
 import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation';
-import {AsyncStorage, AppState, StatusBar} from 'react-native';
+import {AppState, StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import {AppLoading, Asset, Font} from 'expo';
 import {Ionicons} from '@expo/vector-icons';
@@ -11,7 +11,7 @@ import firebase from 'firebase';
 import RootNavigation from './navigation/RootNavigation';
 import Config from './config';
 import {PersistGate} from 'redux-persist/integration/react'
-import {store, persistor} from './store';
+import {persistor, store} from './store';
 import Sentry from 'sentry-expo';
 import {LOCK, UNLOCK} from "./constants/types";
 

@@ -1,4 +1,4 @@
-import {TOGGLE_TOUCH_ID, TOGGLE_PASSCODE, TOGGLE_PUSH_NOTIFICATIONS, RESET} from "../constants/types";
+import {RESET, TOGGLE_PASSCODE, TOGGLE_PUSH_NOTIFICATIONS, TOGGLE_TOUCH_ID} from "../constants/types";
 
 const INITIAL_STATE = {
     touch_id: false,

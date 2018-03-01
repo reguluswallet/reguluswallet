@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {StackNavigator, addNavigationHelpers} from 'react-navigation';
-import {
-    createReduxBoundAddListener,
-    createReactNavigationReduxMiddleware,
-} from 'react-navigation-redux-helpers';
+import {addNavigationHelpers, StackNavigator} from 'react-navigation';
+import {createReactNavigationReduxMiddleware, createReduxBoundAddListener} from 'react-navigation-redux-helpers';
 import SetupScreen from '../screens/SetupScreen';
 import MainTabNavigator from './MainTabNavigator';
 import {Colors} from '../constants';
@@ -39,7 +36,6 @@ const RootStackNavigator = StackNavigator(
         }
     },
     {
-        // mode: 'modal',
         navigationOptions: () => ({
             headerTintColor: Colors.tintColor,
             headerStyle: {
