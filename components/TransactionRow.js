@@ -3,6 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {Amount} from '../components/';
 import {connect} from 'react-redux';
+import moment from "moment";
 
 class TransactionRow extends Component {
     state = {
@@ -25,6 +26,9 @@ class TransactionRow extends Component {
 
     _renderDetails(item) {
         if (this.state.open) {
+
+            let date = moment(item.created_at).format("MMM Do YYYY, h:mm:ss A");
+
             return (
                 <View style={styles.expandedContainer}>
                     <View style={styles.mb}>
@@ -32,8 +36,8 @@ class TransactionRow extends Component {
                         <Text style={styles.expandedText}>{item.from}</Text>
                     </View>
                     <View>
-                        <Text style={styles.expandedTitle}>Memo:</Text>
-                        <Text style={styles.expandedText}>Thanks from lumenaut.net </Text>
+                        <Text style={styles.expandedTitle}>Date:</Text>
+                        <Text style={styles.expandedText}>{date}</Text>
                     </View>
                 </View>
             )
@@ -81,7 +85,7 @@ const styles = StyleSheet.create({
     },
     expandedTitle: {
         color: '#545D6F',
-        fontFamily: 'clear-sans',
+        fontFamily: 'clear-sans-bold',
         fontSize: 14
     },
     mb: {
