@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {
-    Image,
     ListView,
     StyleSheet,
     View,
+    RefreshControl
 } from 'react-native';
 import {connect} from 'react-redux';
-import {Button, Icon, Container, Header, Left, Right, Body, Title, H1, Text} from 'native-base';
+import {Container, Content, Button, Icon, Header, Left, Right, Body, Title, H1, Text} from 'native-base';
 import stellar from 'stellar-sdk';
 import {LoadAccount, LoadOperations} from '../actions';
 import TransactionRow from '../components/TransactionRow';
@@ -18,6 +18,10 @@ var server = new stellar.Server('https://horizon-testnet.stellar.org');
 class TransactionsScreen extends Component {
     static navigationOptions = {
         title: 'Transactions',
+    };
+
+    state = {
+        refreshing: false
     };
 
     componentWillMount() {
@@ -38,19 +42,35 @@ class TransactionsScreen extends Component {
         this.dataSource = ds.cloneWithRows(transactions);
     }
 
+    _onRefresh() {
+        const vm = this;
+        vm.setState({refreshing: true});
+        this.props.LoadOperations(this.props.public_key).then(() => {
+            vm.setState({refreshing: false})
+        });
+    }
+
     render() {
-            return (
-                <View style={styles.container}>
-                    <Balance>{this.props.balance}</Balance>
-                    <ListView
-                        enableEmptySections
-                        dataSource={this.dataSource}
-                        renderRow={item => <TransactionRow item={item}/>}
-                        renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
-                        renderHeader={() => <SectionHeader>Transactions</SectionHeader>}
+        return (
+            <Container>
+                <Balance>{this.props.balance}</Balance>
+                <Content refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this._onRefresh.bind(this)}
                     />
-                </View>
-            );
+                }>
+                <ListView
+                    enableEmptySections
+                    dataSource={this.dataSource}
+                    renderRow={item => <TransactionRow item={item}/>}
+                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
+                    renderHeader={() => <SectionHeader>Transactions</SectionHeader>}
+                />
+                    </Content>
+
+            </Container>
+        );
     }
 }
 
@@ -60,10 +80,6 @@ const styles = StyleSheet.create({
         height: StyleSheet.hairlineWidth,
         marginLeft: Layout.gutter,
         backgroundColor: Colors.grey,
-    },
-    container: {
-        flex: 1,
-        backgroundColor: Colors.white,
     },
     content: {
         padding: Layout.gutter,
