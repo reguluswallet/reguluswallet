@@ -1,9 +1,15 @@
-import {ADD_ACCOUNT, SET_USER, TOGGLE_COMPLETED_SETUP, TOGGLE_LOADING, LOCK, UNLOCK, RESET} from '../constants/types';
+import {
+    LOCK,
+    RESET,
+    SET_COMPLETED_SETUP,
+    SET_USER,
+    TOGGLE_LOADING,
+    UNLOCK
+} from '../constants/types';
 
 const INITIAL_STATE = {
-    user: null,
+    user: {},
     completed_setup: false,
-    accounts: [],
     locked: false,
     loading: false,
 };
@@ -12,14 +18,13 @@ export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
         case SET_USER:
             return {...state, user: action.user};
-        case ADD_ACCOUNT:
-            return {
-                ...state,
-                accounts: [...state.accounts, action.account]
-            };
-        case  TOGGLE_COMPLETED_SETUP:
-            return {...state, completed_setup: !state.completed_setup};
+        case SET_COMPLETED_SETUP:
+            return {...state, completed_setup: action.completed_setup};
         case TOGGLE_LOADING:
+            if (action.loading) {
+                return {...state, loading: action.loading};
+            }
+
             return {...state, loading: !state.loading};
         case LOCK:
             return {...state, locked: true};

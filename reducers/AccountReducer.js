@@ -1,17 +1,16 @@
 import _ from 'lodash';
-import {SET_KEYS, LOAD_ACCOUNT, LOAD_OPERATIONS, RESET} from '../constants/types';
+import {LOAD_ACCOUNT, LOAD_OPERATIONS, RESET, SET_PUBLIC_KEY} from '../constants/types';
 
 const INITIAL_STATE = {
-    public_key: undefined,
-    secret_key: undefined,
+    public_key: '',
     balance: 0,
     transactions: []
 };
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case SET_KEYS:
-            return {...state, public_key: action.public_key, secret_key: action.secret_key};
+        case SET_PUBLIC_KEY:
+            return {...state, public_key: action.public_key};
         case LOAD_ACCOUNT:
             let nativeBalance = _.find(action.account.balances, function (b) {
                 return b.asset_type == 'native';
