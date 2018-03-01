@@ -92,7 +92,7 @@ class SettingsComponent extends Component {
                             <Text title>Email</Text>
                             </Body>
                             <Right>
-                                <Text>suxur@me.com</Text>
+                                <Text>{this.props.user.email}</Text>
                             </Right>
                         </ListItem>
                         <ListItem itemDivider>
@@ -135,10 +135,12 @@ class SettingsComponent extends Component {
     }
 }
 
-const mapStateToProps = ({account, settings}) => {
+const mapStateToProps = ({app, account, settings}) => {
     let {public_key, balance} = account;
     let {touch_id, passcode, push_notifications} = settings;
-    return {public_key, balance, touch_id, passcode, push_notifications};
+    let {user} = app;
+
+    return {user, public_key, balance, touch_id, passcode, push_notifications};
 };
 
 const styles = StyleSheet.create({
