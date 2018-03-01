@@ -10,9 +10,6 @@ class NoWalletComponent extends Component {
         title: '',
     };
 
-    _createWallet() {
-    }
-
     render() {
         return (
             <Container>
@@ -21,10 +18,7 @@ class NoWalletComponent extends Component {
                     <Image source={require('../assets/images/wallet.png')}
                     />
                     <View style={styles.buttons}>
-                        <Button block onPress={this._createWallet.bind(this)}>
-                            <Text>Create Wallet</Text>
-                        </Button>
-                        <Button block bordered dark onPress={() => {this.props.Route('AddWallet')}}>
+                        <Button block onPress={() => {this.props.Route('AddWallet')}}>
                             <Text>Add Wallet</Text>
                         </Button>
                     </View>
