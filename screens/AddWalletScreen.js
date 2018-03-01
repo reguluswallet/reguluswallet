@@ -1,9 +1,9 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {Container, Content, Form, Item, Input, Label, Text} from "native-base";
+import {Container, Content, Form, Input, Item, Label, Text} from "native-base";
 import {Field, reduxForm} from "redux-form";
 import {AddAccount} from "../actions";
-import {Button} from "../components";
+import {LoadingButton} from "../components";
 
 const validate = values => {
     const error = {};
@@ -64,19 +64,19 @@ class AddWalletComponent extends Component {
                         ATTENTION: We will never save your secret key. It will be encrypted and stored only on your
                         device. This allows you to quickly and easily sign your transactions.
                     </Text>
-                    <Button block onPress={this.props.handleSubmit(data => {
+                    <LoadingButton block onPress={this.props.handleSubmit(data => {
                         const {public_key, secret_key} = data;
                         this.props.AddAccount(public_key, secret_key);
                     }).bind(this)}>
                         Save and Continue
-                    </Button>
+                    </LoadingButton>
                 </Content>
             </Container>
         );
     }
 }
 
-const AddWalletScreen = reduxForm({form: 'test', validate})(connect(null, {AddAccount})(AddWalletComponent));
+const AddWalletScreen = reduxForm({form: 'add_wallet', validate})(connect(null, {AddAccount})(AddWalletComponent));
 
 export {AddWalletScreen};
 
