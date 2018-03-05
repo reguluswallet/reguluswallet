@@ -62,7 +62,6 @@ export const LoginAnonymously = () => {
 
 export const Register = (email, password) => {
     return (dispatch) => {
-        dispatch(ToggleLoading());
         return firebase.auth().createUserWithEmailAndPassword(email, password)
             .then((user) => {
                 const ref = firebase.database().ref(`users/${user.uid}`);
@@ -73,12 +72,10 @@ export const Register = (email, password) => {
                 }).then(() => {
                     dispatch(GetUserData(user)).then(() => {
                         dispatch(getNavigationAction('Main'));
-                        dispatch(ToggleLoading());
                     });
                 });
             })
             .catch((error) => {
-                dispatch(ToggleLoading());
                 return Promise.reject(error.message);
             });
     }

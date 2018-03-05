@@ -1,10 +1,19 @@
 import React, {Component} from "react";
+import PropTypes from "prop-types";
 import {ActivityIndicator} from "react-native";
 import {Button, Text} from "native-base";
 import {Colors} from "../../constants";
-import {connect} from "react-redux";
 
+/**
+ * Loading Button Component
+ */
 class LoadingButtonComponent extends Component {
+
+    /**
+     * Render Button Child
+     *
+     * @returns {*}
+     */
     renderButtonChild() {
         if (this.props.loading) {
             return <ActivityIndicator color={Colors.white}/>
@@ -13,6 +22,11 @@ class LoadingButtonComponent extends Component {
         return <Text>{this.props.children}</Text>;
     }
 
+    /**
+     * Render
+     *
+     * @returns {*}
+     */
     render() {
         return (
             <Button {...this.props} disabled={this.props.loading}>
@@ -22,11 +36,10 @@ class LoadingButtonComponent extends Component {
     }
 }
 
-const mapStateToProps = ({app}) => {
-    let {loading} = app;
-    return {loading};
+LoadingButtonComponent.propTypes = {
+    loading: PropTypes.bool.isRequired
 };
 
-const LoadingButton = connect(mapStateToProps)(LoadingButtonComponent);
+const LoadingButton = LoadingButtonComponent;
 
 export {LoadingButton};
