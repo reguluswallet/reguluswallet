@@ -1,3 +1,4 @@
-export * from './AccountActions';
-export * from './AppActions';
-export * from './SettingsActions';
+export * from "./AccountActions";
+export * from "./AppActions";
+export * from "./DeviceActions";
+export * from "./SettingsActions";
