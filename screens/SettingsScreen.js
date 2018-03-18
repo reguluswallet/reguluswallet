@@ -1,52 +1,100 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Logout, ToggleTouchID, TogglePushNotifications, TogglePasscode} from '../actions';
-import {Fingerprint} from 'expo';
-import {Grid, Row, Col, Button, Container, Content, Icon, Switch, Left, Body, Right, List, ListItem, Text, View} from "native-base";
-import {Modal, StyleSheet} from "react-native";
-import {Colors} from "../constants/Colors";
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import {
+    Body,
+    Button,
+    Container,
+    Content,
+    Icon,
+    List,
+    ListItem,
+    Right,
+    Switch,
+    Text
+} from "native-base";
+import {
+    Logout,
+    SetPasscode,
+    ToggleFingerprintEnabled,
+    ToggleHasPasscode
+} from "../actions";
+import {
+    Alert,
+    CheckPasscodeModal,
+    FingerprintRow,
+    PasscodeModal
+} from "../components";
 
 class SettingsComponent extends Component {
     static navigationOptions = {
-        title: 'Settings',
+        title: "Settings"
     };
 
     state = {
-        modalVisible: false,
-        fingerprint: false
+        modal_visible: false,
+        check_modal_visible: false
     };
 
-    componentWillMount() {
-        const vm = this;
-        Fingerprint.hasHardwareAsync().then((result) => {
-            vm.setState({fingerprint: result})
-        });
+    constructor() {
+        super();
+        this.openModal = this.openModal.bind(this);
+        this.closeModal = this.closeModal.bind(this);
+        this.openCheckModal = this.openCheckModal.bind(this);
+        this.closeCheckModal = this.closeCheckModal.bind(this);
+        this.checkModalCallback = this.checkModalCallback.bind(this);
+        this.setPasscode = this.setPasscode.bind(this);
+        this.togglePasscode = this.togglePasscode.bind(this);
+        this.toggleFingerprintEnabled = this.toggleFingerprintEnabled.bind(
+            this
+        );
     }
 
-    _renderTouchID() {
-        if (this.state.fingerprint) {
-            return (
-                <ListItem icon>
-                    <Body>
-                    <Text>Require TouchID</Text>
-                    </Body>
-                    <Right>
-                        <Switch
-                            value={this.props.touch_id}
-                            onValueChange={this.props.ToggleTouchID}
-                        />
-                    </Right>
-                </ListItem>
-            )
+    toggleFingerprintEnabled(value) {
+        if (value) {
+            if (this.props.has_passcode) {
+                this.props.ToggleFingerprintEnabled();
+            } else {
+                Alert("You must set a passcode before using TouchID");
+            }
+        } else {
+            // TODO: Confirm passcode
+            this.props.ToggleFingerprintEnabled(false);
         }
     }
 
+    togglePasscode(value) {
+        if (value) {
+            this.openModal();
+        } else {
+            this.openCheckModal();
+            // TODO: Confirm passcode
+        }
+    }
+
+    setPasscode(passcode) {
+        this.props.SetPasscode(passcode);
+        this.props.ToggleHasPasscode(true);
+    }
+
     openModal() {
-        this.setState({modalVisible:true});
+        this.setState({ modal_visible: true });
     }
 
     closeModal() {
-        this.setState({modalVisible:false});
+        this.setState({ modal_visible: false });
+    }
+
+    openCheckModal() {
+        this.setState({ check_modal_visible: true });
+    }
+
+    closeCheckModal() {
+        this.setState({ check_modal_visible: false });
+    }
+
+    checkModalCallback() {
+        this.props.SetPasscode("");
+        this.props.ToggleHasPasscode(false);
     }
 
     render() {
@@ -59,21 +107,10 @@ class SettingsComponent extends Component {
                         </ListItem>
                         <ListItem icon>
                             <Body>
-                            <Text>App Version</Text>
+                                <Text>App Version</Text>
                             </Body>
                             <Right>
                                 <Text>1.0.0</Text>
-                            </Right>
-                        </ListItem>
-                        <ListItem icon>
-                            <Body>
-                            <Text>Push for Transactions</Text>
-                            </Body>
-                            <Right>
-                                <Switch
-                                    value={this.props.push_notifications}
-                                    onValueChange={this.props.TogglePushNotifications}
-                                />
                             </Right>
                         </ListItem>
                         <ListItem itemDivider>
@@ -81,18 +118,12 @@ class SettingsComponent extends Component {
                         </ListItem>
                         <ListItem icon>
                             <Body>
-                            <Text>Wallet</Text>
+                                <Text>Wallet</Text>
                             </Body>
                             <Right>
-                                <Text>{this.props.public_key.substring(0, 4)}</Text>
-                            </Right>
-                        </ListItem>
-                        <ListItem icon>
-                            <Body>
-                            <Text title>Email</Text>
-                            </Body>
-                            <Right>
-                                <Text>{this.props.user.email}</Text>
+                                <Text>
+                                    {this.props.public_key.substring(0, 4)}
+                                </Text>
                             </Right>
                         </ListItem>
                         <ListItem itemDivider>
@@ -100,72 +131,61 @@ class SettingsComponent extends Component {
                         </ListItem>
                         <ListItem icon>
                             <Body>
-                            <Text>Require Passcode</Text>
+                                <Text>Require Passcode</Text>
                             </Body>
                             <Right>
                                 <Switch
-                                    value={this.props.passcode}
-                                    // onValueChange={this.props.TogglePasscode}
-                                    onValueChange={this.openModal.bind(this)}
+                                    value={this.props.has_passcode}
+                                    onValueChange={this.togglePasscode}
                                 />
                             </Right>
                         </ListItem>
-                        {this._renderTouchID()}
-                        <ListItem itemDivider large/>
+                        <FingerprintRow
+                            onValueChange={this.toggleFingerprintEnabled}
+                        />
+                        <ListItem itemDivider large />
                     </List>
                     <Button full danger iconRight onPress={this.props.Logout}>
                         <Text>Logout</Text>
-                        <Icon name='log-out'/>
+                        <Icon name="log-out" />
                     </Button>
-                    <Button full dark transparent>
-                        <Text>Reset Password</Text>
-                    </Button>
+                    <PasscodeModal
+                        visible={this.state.modal_visible}
+                        closeModal={this.closeModal}
+                        setPasscode={this.setPasscode}
+                    />
+                    <CheckPasscodeModal
+                        visible={this.state.check_modal_visible}
+                        closeModal={this.closeCheckModal}
+                        callback={this.checkModalCallback}
+                        passcode_confirm={this.props.passcode}
+                    />
                 </Content>
-                <Modal
-                    transparent
-                    visible={this.state.modalVisible}
-                    animationType={'slide'}
-                    onRequestClose={() => this.closeModal()}
-                >
-                    <Content style={styles.modalContainer}>
-                    </Content>
-                </Modal>
             </Container>
         );
     }
 }
 
-const mapStateToProps = ({app, account, settings}) => {
-    let {public_key, balance} = account;
-    let {touch_id, passcode, push_notifications} = settings;
-    let {user} = app;
+const mapStateToProps = ({ app, account, settings }) => {
+    let { public_key, balance } = account;
+    let { passcode, touch_id, has_passcode } = settings;
+    let { user } = app;
 
-    return {user, public_key, balance, touch_id, passcode, push_notifications};
+    return {
+        user,
+        public_key,
+        balance,
+        passcode,
+        touch_id,
+        has_passcode
+    };
 };
-
-const styles = StyleSheet.create({
-    row: {
-        flex: 1,
-    },
-    // container: {
-    //     flex: 1,
-    //     justifyContent: 'center',
-    // },
-    modalContainer: {
-        // flex: 1,
-        // justifyContent: 'center',
-        backgroundColor: Colors.lightBlue
-    },
-    // innerContainer: {
-    //     alignItems: 'center',
-    // },
-});
 
 const SettingsScreen = connect(mapStateToProps, {
     Logout,
-    ToggleTouchID,
-    TogglePasscode,
-    TogglePushNotifications
+    SetPasscode,
+    ToggleFingerprintEnabled,
+    ToggleHasPasscode
 })(SettingsComponent);
 
-export {SettingsScreen};
+export { SettingsScreen };

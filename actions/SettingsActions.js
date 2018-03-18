@@ -1,27 +1,17 @@
-import {TOGGLE_TOUCH_ID, TOGGLE_PUSH_NOTIFICATIONS, TOGGLE_PASSCODE} from '../constants/types';
-import {NavigationActions} from 'react-navigation';
+import {
+    SET_PASSCODE,
+    TOGGLE_FINGERPRINT_ENABLED,
+    TOGGLE_HAS_PASSCODE
+} from "../constants/types";
 
-export const ToggleTouchID = () => {
-    return {type: TOGGLE_TOUCH_ID}
+export const SetPasscode = passcode => {
+    return { type: SET_PASSCODE, passcode };
 };
 
-export const TogglePasscode = () => {
-    // return {type: TOGGLE_PASSCODE}
-    return (dispatch, getState) => {
-        let {passcode} = getState().settings;
-
-        if (passcode) {
-            dispatch({type: TOGGLE_PASSCODE});
-        } else {
-            dispatch(
-                NavigationActions.navigate({
-                    routeName: 'RequirePasscode'
-                })
-            );
-        }
-    }
+export const ToggleHasPasscode = has_passcode => {
+    return { type: TOGGLE_HAS_PASSCODE, has_passcode };
 };
 
-export const TogglePushNotifications = () => {
-    return {type: TOGGLE_PUSH_NOTIFICATIONS}
+export const ToggleFingerprintEnabled = fingerprint_enabled => {
+    return { type: TOGGLE_FINGERPRINT_ENABLED, fingerprint_enabled };
 };

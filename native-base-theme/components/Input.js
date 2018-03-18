@@ -1,10 +1,10 @@
-import variable from './../variables/platform';
-import {Colors} from '../../constants';
+import variable from "./../variables/platform";
+import { Colors } from "../../constants";
 
 export default (variables = variable) => {
     const inputTheme = {
-        '.multiline': {
-            height: null,
+        ".multiline": {
+            height: null
         },
         ".top": {
             borderBottomWidth: 0,
@@ -17,14 +17,14 @@ export default (variables = variable) => {
         },
         ".bottom": {
             borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
+            borderTopRightRadius: 0
         },
         height: variables.inputHeightBase,
         color: Colors.darkGrey,
         padding: variables.contentPadding,
         paddingLeft: variables.contentPadding / 2,
         flex: 1,
-        fontFamily: 'clear-sans',
+        fontFamily: "clear-sans",
         fontSize: variables.inputFontSize,
         lineHeight: variables.inputLineHeight,
         backgroundColor: Colors.white,

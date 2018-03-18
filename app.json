@@ -17,7 +17,10 @@
       "backgroundColor": "#d4eef7"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to scan qr codes to quickly get public addresses  ."
+      }
     },
     "packagerOpts": {
       "config": "./rn-cli.config.js"

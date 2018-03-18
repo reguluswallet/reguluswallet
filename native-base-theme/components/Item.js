@@ -1,5 +1,4 @@
-import {Platform} from "react-native";
-import {Colors} from "../../constants";
+import { Platform } from "react-native";
 import variable from "./../variables/platform";
 
 export default (variables = variable) => {
@@ -48,7 +47,8 @@ export default (variables = variable) => {
             "NativeBase.Input": {
                 alignSelf: Platform.OS === "ios" ? "stretch" : "flex-start",
                 flex: 1,
-                width: Platform.OS === "ios" ? null : variables.deviceWidth - 25,
+                width:
+                    Platform.OS === "ios" ? null : variables.deviceWidth - 25,
                 fontSize: variables.inputFontSize
             },
             flexDirection: null
@@ -111,6 +111,12 @@ export default (variables = variable) => {
             borderColor: variables.inputBorderColor
         },
         ".regular": {
+            "NativeBase.Button": {
+                position: "absolute",
+                right: 0,
+                height: variables.inputHeightBase - 2,
+                bottom: -8
+            },
             "NativeBase.Icon": {
                 paddingLeft: 10
             },
@@ -122,7 +128,7 @@ export default (variables = variable) => {
             },
             ".error": {
                 borderColor: variables.inputErrorBorderColor
-            },
+            }
         },
         ".top": {
             borderTopLeftRadius: variables.borderRadiusBase,
@@ -136,7 +142,7 @@ export default (variables = variable) => {
         ".bottom": {
             borderTopWidth: 0,
             borderBottomLeftRadius: variables.borderRadiusBase,
-            borderBottomRightRadius: variables.borderRadiusBase,
+            borderBottomRightRadius: variables.borderRadiusBase
         },
         ".rounded": {
             "NativeBase.Input": {

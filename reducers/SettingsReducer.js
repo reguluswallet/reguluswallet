@@ -1,22 +1,32 @@
-import {RESET, TOGGLE_PASSCODE, TOGGLE_PUSH_NOTIFICATIONS, TOGGLE_TOUCH_ID} from "../constants/types";
+import {
+    RESET,
+    SET_PASSCODE,
+    TOGGLE_FINGERPRINT_ENABLED,
+    TOGGLE_HAS_PASSCODE
+} from "../constants/types";
 
 const INITIAL_STATE = {
-    touch_id: false,
-    passcode: false,
-    push_notifications: false
+    passcode: "",
+    has_passcode: false,
+    fingerprint_enabled: false
 };
 
 export default (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case TOGGLE_TOUCH_ID:
-            return {...state, touch_id: !state.touch_id};
-        case TOGGLE_PASSCODE:
-            return {...state, passcode: !state.passcode};
-        case TOGGLE_PUSH_NOTIFICATIONS:
-            return {...state, push_notifications: !state.push_notifications};
+        case SET_PASSCODE:
+            return { ...state, passcode: action.passcode };
+        case TOGGLE_HAS_PASSCODE: {
+            let has_passcode = action.has_passcode || !state.has_passcode;
+            return { ...state, has_passcode };
+        }
+        case TOGGLE_FINGERPRINT_ENABLED: {
+            const fingerprint_enabled =
+                action.fingerprint_enabled || !state.fingerprint_enabled;
+            return { ...state, fingerprint_enabled };
+        }
         case RESET:
             return INITIAL_STATE;
     }
 
     return state;
-}
+};

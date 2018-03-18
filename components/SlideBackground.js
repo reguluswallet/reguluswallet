@@ -1,10 +1,9 @@
-import React from 'react';
-import {Svg} from 'expo';
-import {Colors, Layout} from '../constants';
+import React from "react";
+import { Svg } from "expo";
+import { Colors, Layout } from "../constants";
 
-
-const SlideBackground = (props) => {
-    let {width, height} = Layout.window;
+const SlideBackground = props => {
+    let { width, height } = Layout.window;
 
     let h = height / 2;
     let w = width;
@@ -17,12 +16,9 @@ const SlideBackground = (props) => {
 
     return (
         <Svg height={h} width={w}>
-            <Svg.Polygon
-                points={points}
-                fill={Colors.offWhite}
-            />
+            <Svg.Polygon points={points} fill={Colors.offWhite} />
         </Svg>
     );
 };
 
-export {SlideBackground};
+export { SlideBackground };

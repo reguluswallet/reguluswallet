@@ -5,3 +5,4 @@ config.js
 android/**/*
 ios/**/*
 app-detached.json
+backlog/**/*

@@ -1,28 +1,29 @@
-import React, {Component} from 'react';
-import {
-    ListView,
-    StyleSheet,
-    View,
-    RefreshControl
-} from 'react-native';
-import {connect} from 'react-redux';
-import {Container, Content, Button, Icon, Header, Left, Right, Body, Title, H1, Text} from 'native-base';
-import stellar from 'stellar-sdk';
-import {LoadAccount, LoadOperations} from '../actions';
-import TransactionRow from '../components/TransactionRow';
-import {Balance, SectionHeader} from '../components';
-import {Colors, Layout} from '../constants';
+import React, { Component } from "react";
+import { ListView, RefreshControl, StyleSheet, View } from "react-native";
+import { connect } from "react-redux";
+import { Container, Content } from "native-base";
+import { LoadAccount, LoadOperations } from "../actions";
+import TransactionRow from "../components/TransactionRow";
+import { Balance, SectionHeader } from "../components";
+import { Colors, Layout } from "../constants";
 
-var server = new stellar.Server('https://horizon-testnet.stellar.org');
-
-class TransactionsScreen extends Component {
+/**
+ * Transactions Screen Component
+ */
+class TransactionsScreenComponent extends Component {
     static navigationOptions = {
-        title: 'Transactions',
+        title: "Transactions"
     };
 
     state = {
         refreshing: false
     };
+
+    constructor() {
+        super();
+
+        this.refresh = this.refresh.bind(this);
+    }
 
     componentWillMount() {
         this.props.LoadAccount(this.props.public_key);
@@ -34,7 +35,7 @@ class TransactionsScreen extends Component {
         this.createDataSource(nextProps);
     }
 
-    createDataSource({transactions}) {
+    createDataSource({ transactions }) {
         const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 !== r2
         });
@@ -42,11 +43,13 @@ class TransactionsScreen extends Component {
         this.dataSource = ds.cloneWithRows(transactions);
     }
 
-    _onRefresh() {
+    refresh() {
         const vm = this;
-        vm.setState({refreshing: true});
+        vm.setState({ refreshing: true });
         this.props.LoadOperations(this.props.public_key).then(() => {
-            vm.setState({refreshing: false})
+            vm.props.LoadAccount(vm.props.public_key).then(() => {
+                vm.setState({ refreshing: false });
+            });
         });
     }
 
@@ -54,21 +57,27 @@ class TransactionsScreen extends Component {
         return (
             <Container>
                 <Balance>{this.props.balance}</Balance>
-                <Content refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh.bind(this)}
+                <Content
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.refreshing}
+                            onRefresh={this.refresh}
+                        />
+                    }
+                >
+                    <ListView
+                        enableEmptySections
+                        pageSize={8}
+                        dataSource={this.dataSource}
+                        renderRow={item => <TransactionRow item={item} />}
+                        renderSeparator={(sectionId, rowId) => (
+                            <View key={rowId} style={styles.separator} />
+                        )}
+                        renderHeader={() => (
+                            <SectionHeader>Transactions</SectionHeader>
+                        )}
                     />
-                }>
-                <ListView
-                    enableEmptySections
-                    dataSource={this.dataSource}
-                    renderRow={item => <TransactionRow item={item}/>}
-                    renderSeparator={(sectionId, rowId) => <View key={rowId} style={styles.separator}/>}
-                    renderHeader={() => <SectionHeader>Transactions</SectionHeader>}
-                />
-                    </Content>
-
+                </Content>
             </Container>
         );
     }
@@ -79,18 +88,23 @@ const styles = StyleSheet.create({
         flex: 1,
         height: StyleSheet.hairlineWidth,
         marginLeft: Layout.gutter,
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.grey
     },
     content: {
         padding: Layout.gutter,
         flex: 1,
-        alignItems: 'center',
+        alignItems: "center"
     }
 });
 
-const mapStateToProps = (state) => {
-    let {public_key, balance, transactions} = state.account;
-    return {public_key, balance, transactions};
+const mapStateToProps = state => {
+    let { public_key, balance, transactions } = state.account;
+    return { public_key, balance, transactions };
 };
 
-export default connect(mapStateToProps, {LoadAccount, LoadOperations})(TransactionsScreen);
+const TransactionsScreen = connect(mapStateToProps, {
+    LoadAccount,
+    LoadOperations
+})(TransactionsScreenComponent);
+
+export { TransactionsScreen };

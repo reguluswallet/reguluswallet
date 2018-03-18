@@ -1,22 +1,24 @@
-import React from 'react';
-import { TextInput, View, Text } from 'react-native';
-import { Colors, Layout } from '../../constants';
+import React from "react";
+import { Input, Item } from "native-base";
+import { Colors, Layout } from "../../constants";
 
-const Input = ({ label, value, onChangeText, placeholder, secureTextEntry }) => {
-    const { inputStyle, labelStyle, containerStyle } = styles;
-
+const TestInput = () => {
     return (
-        <View style={containerStyle}>
-            <Text style={labelStyle}>{label}</Text>
-            <TextInput
-                secureTextEntry={secureTextEntry}
-                placeholder={placeholder}
+        <Item regular>
+            <Input
+                {...props}
+                ref={props.ref}
+                selectionColor={Colors.tintColor}
+                autoCapitalize="none"
                 autoCorrect={false}
-                style={inputStyle}
-                value={value}
-                onChangeText={onChangeText}
+                returnKeyType="next"
+                keyboardType="email-address"
+                placeholder="E-mail Address"
+                placeholderTextColor={Colors.grey}
+                onChangeText={value => this.setState({ reset_email: value })}
+                value={this.state.reset_email}
             />
-        </View>
+        </Item>
     );
 };
 
@@ -29,16 +31,16 @@ const styles = {
         borderRadius: 5,
         borderWidth: 1,
         borderColor: Colors.grey,
-        fontFamily: 'clear-sans'
+        fontFamily: "clear-sans"
     },
     labelStyle: {
         fontSize: 16,
         marginBottom: 5,
-        fontFamily: 'clear-sans'
+        fontFamily: "clear-sans"
     },
     containerStyle: {
         marginBottom: Layout.gutter
     }
 };
 
-export { Input };
+export { TestInput };

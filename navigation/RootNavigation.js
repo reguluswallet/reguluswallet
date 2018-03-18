@@ -1,26 +1,33 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {addNavigationHelpers, StackNavigator} from 'react-navigation';
-import {createReactNavigationReduxMiddleware, createReduxBoundAddListener} from 'react-navigation-redux-helpers';
-import SetupScreen from '../screens/SetupScreen';
-import MainTabNavigator from './MainTabNavigator';
-import {Colors} from '../constants';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { addNavigationHelpers, StackNavigator } from "react-navigation";
+import {
+    createReactNavigationReduxMiddleware,
+    createReduxBoundAddListener
+} from "react-navigation-redux-helpers";
+import SetupScreen from "../screens/SetupScreen";
+import MainTabNavigator from "./MainTabNavigator";
+import { Colors } from "../constants";
 import SplashScreen from "../screens/SplashScreen";
-import {AddWalletScreen, AuthScreen, LoadingScreen, NoWalletScreen} from "../screens";
+import {
+    AddAccountScreen,
+    CreateAccountScreen,
+    LoadingScreen,
+    MissingKeyScreen,
+    NoAccountScreen,
+    PasscodeScreen
+} from "../screens";
 
 const RootStackNavigator = StackNavigator(
     {
         Loading: {
             screen: LoadingScreen
         },
-        Auth: {
-            screen: AuthScreen
-        },
         Setup: {
             screen: SetupScreen
         },
-        NoWallet: {
-            screen: NoWalletScreen
+        NoAccount: {
+            screen: NoAccountScreen
         },
         Main: {
             screen: MainTabNavigator,
@@ -28,56 +35,70 @@ const RootStackNavigator = StackNavigator(
                 gesturesEnabled: false
             }
         },
+        MissingKey: {
+            screen: MissingKeyScreen
+        },
         Splash: {
             screen: SplashScreen
         },
-        AddWallet: {
-            screen: AddWalletScreen
+        AddAccount: {
+            screen: AddAccountScreen
+        },
+        CreateAccount: {
+            screen: CreateAccountScreen
+        },
+        PasscodeScreen: {
+            screen: PasscodeScreen
         }
     },
     {
         navigationOptions: () => ({
             headerTintColor: Colors.tintColor,
             headerStyle: {
-                backgroundColor: '#d4eef7'
+                backgroundColor: "#d4eef7"
             },
             headerTitleStyle: {
-                fontFamily: 'clear-sans-bold',
-            },
-        }),
+                fontFamily: "clear-sans-bold"
+            }
+        })
     }
 );
 
 const INITIAL_STATE = RootStackNavigator.router.getStateForAction(
-    RootStackNavigator.router.getActionForPathAndParams('Loading')
+    RootStackNavigator.router.getActionForPathAndParams("Loading")
 );
 
 export const RootNavigationReducer = (state = INITIAL_STATE, action) => {
-    const nextState = RootStackNavigator.router.getStateForAction(action, state);
+    const nextState = RootStackNavigator.router.getStateForAction(
+        action,
+        state
+    );
 
     // Simply return the original `state` if `nextState` is null or undefined.
     return nextState || state;
 };
 
 export const RootNavigationMiddleware = createReactNavigationReduxMiddleware(
-    'root',
-    state => state.nav,
+    "root",
+    state => state.nav
 );
-const addListener = createReduxBoundAddListener('root');
+const addListener = createReduxBoundAddListener("root");
 
 class RootNavigator extends Component {
     render() {
         return (
-            <RootStackNavigator navigation={addNavigationHelpers({
-                dispatch: this.props.dispatch,
-                state: this.props.nav,
-                addListener
-            })}/>
+            <RootStackNavigator
+                navigation={addNavigationHelpers({
+                    dispatch: this.props.dispatch,
+                    state: this.props.nav,
+                    addListener
+                })}
+            />
         );
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     nav: state.nav
 });
 

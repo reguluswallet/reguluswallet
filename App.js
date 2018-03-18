@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { NavigationActions } from "react-navigation";
 import { AppState, StatusBar } from "react-native";
 import { Provider } from "react-redux";
-import { AppLoading, Asset, Font } from "expo";
+import { AppLoading, Asset, Font, Fingerprint } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Root, StyleProvider } from "native-base";
 import firebase from "firebase";
@@ -11,54 +11,99 @@ import Sentry from "sentry-expo";
 import { PersistGate } from "redux-persist/integration/react";
 import RootNavigation from "./navigation/RootNavigation";
 import getTheme from "./native-base-theme/components";
+import { CheckPasscodeModal } from "./components";
 import Config from "./config";
 import { persistor, store } from "./store";
-import { LOCK, UNLOCK } from "./constants/types";
 
 Sentry.enableInExpoDevelopment = true;
-// import { SentrySeverity, SentryLog } from 'react-native-sentry';
 Sentry.config(Config.sentry.url).install();
 
 firebase.initializeApp(Config.firebase);
 
 export default class App extends Component {
     state = {
-        isLoadingComplete: false,
         authenticated: false,
-        appState: AppState.currentState
+        app_state: AppState.currentState,
+        is_loading_complete: false,
+        modal_visible: false,
+        locked: false
     };
 
+    constructor() {
+        super();
+
+        this.closeModal = this.closeModal.bind(this);
+        this.unlockApp = this.unlockApp.bind(this);
+    }
+
     componentDidMount() {
-        AppState.addEventListener("change", this._handleAppStateChange);
+        AppState.addEventListener("change", this.handleAppStateChange);
     }
 
     componentWillUnmount() {
-        AppState.removeEventListener("change", this._handleAppStateChange);
+        AppState.removeEventListener("change", this.handleAppStateChange);
     }
 
-    _handleAppStateChange = nextAppState => {
+    handleAppStateChange = nextAppState => {
         if (
-            this.state.appState.match(/inactive|background/) &&
+            this.state.app_state.match(/inactive|background/) &&
             nextAppState === "active"
         ) {
+            const {
+                fingerprint_enabled,
+                has_passcode
+            } = store.getState().settings;
             // If TouchID is available and enabled?
-            // If pin is set?
-            store.dispatch({ type: UNLOCK });
-            store.dispatch(NavigationActions.back());
+            if (fingerprint_enabled && this.state.locked) {
+                Fingerprint.authenticateAsync("Unlock with TouchID?").then(
+                    result => {
+                        if (result.success) {
+                            this.unlockApp();
+                        }
+                    }
+                );
+            } else if (has_passcode && this.state.locked) {
+                this.setState({ modal_visible: true });
+            } else {
+                this.unlockApp();
+            }
         } else {
-            if (!store.getState().app.locked) {
-                store.dispatch({ type: LOCK });
+            if (!this.state.locked) {
+                this.setState({ locked: true });
                 store.dispatch(
                     NavigationActions.navigate({ routeName: "Splash" })
                 );
             }
         }
 
-        this.setState({ appState: nextAppState });
+        this.setState({ app_state: nextAppState });
     };
 
+    closeModal() {
+        this.setState({ modal_visible: false });
+    }
+
+    unlockApp() {
+        this.setState({ locked: false });
+        store.dispatch(NavigationActions.back());
+    }
+
+    renderCheckpasscodeModal() {
+        const { passcode, has_passcode } = store.getState().settings;
+        if (has_passcode) {
+            return (
+                <CheckPasscodeModal
+                    visible={this.state.modal_visible}
+                    closeModal={this.closeModal}
+                    callback={this.unlockApp}
+                    passcode_confirm={passcode}
+                />
+            );
+        }
+    }
+
     render() {
-        if (!this.state.isLoadingComplete && !this.state.authenticated) {
+        if (!this.state.is_loading_complete && !this.state.authenticated) {
             return (
                 <AppLoading
                     startAsync={this._loadResourcesAsync}
@@ -74,6 +119,7 @@ export default class App extends Component {
                             <Root>
                                 <StatusBar barStyle="default" />
                                 <RootNavigation />
+                                {this.renderCheckpasscodeModal()}
                             </Root>
                         </StyleProvider>
                     </PersistGate>
@@ -85,6 +131,7 @@ export default class App extends Component {
     _loadResourcesAsync = async () => {
         return Promise.all([
             Asset.loadAsync([
+                require("./assets/images/logo.png"),
                 require("./assets/images/wallet.png"),
                 require("./assets/images/network.png"),
                 require("./assets/images/send-receive.png")
@@ -105,6 +152,6 @@ export default class App extends Component {
     };
 
     _handleFinishLoading = () => {
-        this.setState({ isLoadingComplete: true });
+        this.setState({ is_loading_complete: true });
     };
 }

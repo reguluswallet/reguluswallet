@@ -1,17 +1,17 @@
-import React, {Component} from "react";
-import {StyleSheet} from "react-native";
-import {Container} from "native-base";
-import {LogoImage} from "../components/index"
-import {Colors} from "../constants/index";
+import React, { Component } from "react";
+import { StyleSheet } from "react-native";
+import { Container } from "native-base";
+import { LogoImage } from "../components/index";
+import { Colors } from "../constants/index";
 
 class SplashScreen extends Component {
     static navigationOptions = {
-        header: false,
+        header: false
     };
     render() {
         return (
             <Container style={styles.container}>
-                <LogoImage/>
+                <LogoImage />
             </Container>
         );
     }
@@ -20,9 +20,9 @@ class SplashScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: Colors.lightBlue,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: Colors.lightBlue
     }
 });
 
