@@ -122,22 +122,8 @@ export const Route = route => {
 
 export const CompleteIntro = () => {
     return dispatch => {
-        const { uid } = firebase.auth().currentUser;
-
-        let data = {
-            completed_setup: true,
-            updated_at: new Date()
-        };
-
-        const ref = firebase.database().ref(`users/${uid}`);
-
-        ref
-            .child("settings")
-            .update(data)
-            .then(() => {
-                dispatch({ type: SET_COMPLETED_SETUP, completed_setup: true });
-                dispatch(getNavigationAction("NoAccount"));
-            });
+        dispatch({ type: SET_COMPLETED_SETUP, completed_setup: true });
+        dispatch(getNavigationAction("NoAccount"));
     };
 };
 
