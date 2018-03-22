@@ -1,14 +1,16 @@
 {
   "expo": {
     "name": "Regulus Wallet",
-    "description": "Regulus is an iOS crypto wallet for Stellar Lumens",
-    "slug": "regulus-wallet",
+    "description": "Regulus is a crypto wallet for Stellar Lumens",
+    "slug": "reguluswallet",
     "privacy": "public",
     "sdkVersion": "25.0.0",
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ],
     "version": "1.0.0",
+    "githubUrl": "https://github.com/reguluswallet/reguluswallet",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
@@ -18,9 +20,13 @@
     },
     "ios": {
       "supportsTablet": false,
+      "bundleIdentifier": "com.reguluswallet.reguluswallet",
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to scan qr codes to quickly get public addresses  ."
       }
+    },
+    "android": {
+      "package": "com.reguluswallet.reguluswallet"
     },
     "packagerOpts": {
       "config": "./rn-cli.config.js"
@@ -30,9 +36,9 @@
         {
           "file": "sentry-expo/upload-sourcemaps",
           "config": {
-            "organization": "your organization's short name here",
-            "project": "your project short name here",
-            "authToken": "your auth token here"
+            "organization": "reguluswallet",
+            "project": "reguluswallet",
+            "authToken": "7325b7be178b11e88bd34201c0a8d046"
           }
         }
       ]

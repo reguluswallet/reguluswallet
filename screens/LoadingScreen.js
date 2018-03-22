@@ -35,6 +35,8 @@ class LoadingComponent extends Component {
                         vm.props.ToggleDeviceInitialized();
                         vm.loadInitialRoute();
                     });
+                } else {
+                    vm.loadInitialRoute();
                 }
             });
         } else {

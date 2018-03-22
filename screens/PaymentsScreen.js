@@ -113,14 +113,12 @@ class PaymentsComponent extends Component {
         let { destination, amount } = this.state;
 
         if (destination === "") {
-            PaymentsComponent.showError(
-                "You must provide a destination address"
-            );
+            Alert("You must provide a destination address");
             return false;
         }
 
         if (amount === "") {
-            PaymentsComponent.showError("You must provide an amount");
+            Alert("You must provide an amount");
             return false;
         }
 

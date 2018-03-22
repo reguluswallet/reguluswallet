@@ -80,23 +80,21 @@ const SendPayment = (sourceId, destinationId, amount, memo) => {
                         // Start building the transaction.
                         transaction = new StellarSdk.TransactionBuilder(
                             sourceAccount
-                        ).addOperation(
-                            StellarSdk.Operation.payment({
-                                destination: destinationId,
-                                // Because Stellar allows transaction in many currencies, you must
-                                // specify the asset type. The special "native" asset represents Lumens.
-                                asset: StellarSdk.Asset.native(),
-                                amount
-                            })
-                        );
+                        )
+                            .addOperation(
+                                StellarSdk.Operation.payment({
+                                    destination: destinationId,
+                                    // Because Stellar allows transaction in many currencies, you must
+                                    // specify the asset type. The special "native" asset represents Lumens.
+                                    asset: StellarSdk.Asset.native(),
+                                    amount
+                                })
+                            )
 
-                        // A memo allows you to add your own metadata to a transaction. It's
-                        // optional and does not affect how Stellar treats the transaction.
-                        if (memo) {
-                            transaction.addMemo(StellarSdk.Memo.text(memo));
-                        }
-
-                        transaction.build();
+                            // A memo allows you to add your own metadata to a transaction. It's
+                            // optional and does not affect how Stellar treats the transaction.
+                            .addMemo(StellarSdk.Memo.text(memo))
+                            .build();
 
                         // Sign the transaction to prove you are actually the person sending it.
                         transaction.sign(sourceKeys);

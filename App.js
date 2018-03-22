@@ -6,7 +6,6 @@ import { Provider } from "react-redux";
 import { AppLoading, Asset, Font, Fingerprint } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Root, StyleProvider } from "native-base";
-import firebase from "firebase";
 import Sentry from "sentry-expo";
 import { PersistGate } from "redux-persist/integration/react";
 import RootNavigation from "./navigation/RootNavigation";
@@ -17,8 +16,6 @@ import { persistor, store } from "./store";
 
 Sentry.enableInExpoDevelopment = true;
 Sentry.config(Config.sentry.url).install();
-
-firebase.initializeApp(Config.firebase);
 
 export default class App extends Component {
     state = {
