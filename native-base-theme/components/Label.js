@@ -5,7 +5,7 @@ export default (variables = variable) => {
         ".focused": {
             width: 0
         },
-        fontFamily: 'clear-sans-bold',
+        fontFamily: "clear-sans-bold",
         fontSize: 16
     };
 

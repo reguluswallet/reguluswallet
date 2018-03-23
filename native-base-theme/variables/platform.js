@@ -1,6 +1,6 @@
 import color from "color";
-import {Platform, Dimensions, PixelRatio} from "react-native";
-import {Colors} from "../../constants";
+import { Dimensions, PixelRatio, Platform } from "react-native";
+import { Colors } from "../../constants";
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
@@ -59,7 +59,9 @@ export default {
         return this.inverseTextColor;
     },
     get btnTextSize() {
-        return platform === "ios" ? this.fontSizeBase * 1.1 : this.fontSizeBase - 1;
+        return platform === "ios"
+            ? this.fontSizeBase * 1.1
+            : this.fontSizeBase - 1;
     },
     get btnTextSizeLarge() {
         return this.fontSizeBase * 1.5;

@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Colors, Layout} from '../constants';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Colors, Layout } from "../constants";
 
-const Balance = (props) => {
+const Balance = props => {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Your balance:</Text>
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export {Balance};
+export { Balance };

@@ -5,7 +5,7 @@ export default (variables = variable) => {
         color: variables.textColor,
         fontSize: variables.fontSizeH3,
         lineHeight: variables.lineHeightH3,
-        fontFamily: 'clear-sans'
+        fontFamily: "clear-sans"
     };
 
     return h3Theme;

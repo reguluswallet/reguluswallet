@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import { NavigationActions } from "react-navigation";
 import { AppState, StatusBar } from "react-native";
 import { Provider } from "react-redux";
-import { AppLoading, Asset, Font, Fingerprint } from "expo";
+import { AppLoading, Asset, Fingerprint, Font } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Root, StyleProvider } from "native-base";
 import Sentry from "sentry-expo";

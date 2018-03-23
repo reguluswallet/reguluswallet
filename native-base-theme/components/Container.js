@@ -1,7 +1,7 @@
-import {Platform, Dimensions} from "react-native";
+import { Dimensions, Platform } from "react-native";
 
 import variable from "./../variables/platform";
-import {Colors} from "../../constants";
+import { Colors } from "../../constants";
 
 const deviceHeight = Dimensions.get("window").height;
 export default (variables = variable) => {

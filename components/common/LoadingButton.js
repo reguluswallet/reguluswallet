@@ -1,14 +1,13 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {ActivityIndicator} from "react-native";
-import {Button, Text} from "native-base";
-import {Colors} from "../../constants";
+import { ActivityIndicator } from "react-native";
+import { Button, Text } from "native-base";
+import { Colors } from "../../constants";
 
 /**
  * Loading Button Component
  */
 class LoadingButtonComponent extends Component {
-
     /**
      * Render Button Child
      *
@@ -16,7 +15,7 @@ class LoadingButtonComponent extends Component {
      */
     renderButtonChild() {
         if (this.props.loading) {
-            return <ActivityIndicator color={Colors.white}/>
+            return <ActivityIndicator color={Colors.white} />;
         }
 
         return <Text>{this.props.children}</Text>;
@@ -42,4 +41,4 @@ LoadingButtonComponent.propTypes = {
 
 const LoadingButton = LoadingButtonComponent;
 
-export {LoadingButton};
+export { LoadingButton };

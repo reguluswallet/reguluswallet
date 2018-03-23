@@ -1,15 +1,14 @@
-import React, {Component} from 'react';
-import {StyleSheet, Image} from 'react-native';
-import {Colors, Layout} from '../constants';
+import React from "react";
+import { Image, StyleSheet } from "react-native";
+import { Layout } from "../constants";
 
 const LogoImage = () => {
     return (
         <Image
-            source={require('../assets/images/logo.png')}
+            source={require("../assets/images/logo.png")}
             style={styles.logo}
         />
-    )
-
+    );
 };
 
 const styles = StyleSheet.create({
@@ -18,4 +17,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export {LogoImage};
+export { LogoImage };

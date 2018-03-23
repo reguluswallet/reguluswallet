@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Colors, Layout} from '../constants';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Colors, Layout } from "../constants";
 
-const SectionHeader = (props) => {
+const SectionHeader = props => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>{props.children}</Text>
@@ -18,10 +18,10 @@ const styles = StyleSheet.create({
         borderBottomColor: Colors.grey
     },
     text: {
-        fontFamily: 'clear-sans-bold',
+        fontFamily: "clear-sans-bold",
         fontSize: 18,
         color: Colors.darkGrey
     }
 });
 
-export {SectionHeader};
+export { SectionHeader };
