@@ -33,7 +33,6 @@
     "redux-persist": "5.9.0",
     "redux-persist-expo-securestore": "1.0.0",
     "redux-thunk": "2.2.0",
-    "sentry-expo": "1.7.0",
     "stellar-sdk": "0.8.0",
     "tweetnacl": "1.0.0"
   },

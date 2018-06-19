@@ -6,16 +6,16 @@ import { Provider } from "react-redux";
 import { AppLoading, Asset, Fingerprint, Font } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Root, StyleProvider } from "native-base";
-import Sentry from "sentry-expo";
+// import Sentry from "sentry-expo";
 import { PersistGate } from "redux-persist/integration/react";
 import RootNavigation from "./navigation/RootNavigation";
 import getTheme from "./native-base-theme/components";
 import { CheckPasscodeModal } from "./components";
-import Config from "./config";
+// import Config from "./config";
 import { persistor, store } from "./store";
 
-Sentry.enableInExpoDevelopment = true;
-Sentry.config(Config.sentry.url).install();
+// Sentry.enableInExpoDevelopment = true;
+// Sentry.config(Config.sentry.url).install();
 
 export default class App extends Component {
     state = {
