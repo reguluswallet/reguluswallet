@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { AppLoading, Asset, Fingerprint, Font } from "expo";
 import { Ionicons } from "@expo/vector-icons";
 import { Root, StyleProvider } from "native-base";
-import Sentry from "sentry-expo";
+// import Sentry from "sentry-expo";
 import { PersistGate } from "redux-persist/integration/react";
 import RootNavigation from "./navigation/RootNavigation";
 import getTheme from "./native-base-theme/components";
