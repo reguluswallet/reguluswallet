@@ -11,11 +11,11 @@ import { PersistGate } from "redux-persist/integration/react";
 import RootNavigation from "./navigation/RootNavigation";
 import getTheme from "./native-base-theme/components";
 import { CheckPasscodeModal } from "./components";
-import Config from "./config";
+// import Config from "./config";
 import { persistor, store } from "./store";
 
-Sentry.enableInExpoDevelopment = true;
-Sentry.config(Config.sentry.url).install();
+// Sentry.enableInExpoDevelopment = true;
+// Sentry.config(Config.sentry.url).install();
 
 export default class App extends Component {
     state = {
