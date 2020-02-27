@@ -13,7 +13,7 @@
     "ed25519": "0.0.4",
     "expo": "^25.0.0",
     "firebase": "4.9.1",
-    "lodash": "4.17.4",
+    "lodash": "4.17.13",
     "moment": "2.20.1",
     "native-base": "2.3.8",
     "node-libs-browser": "2.1.0",
